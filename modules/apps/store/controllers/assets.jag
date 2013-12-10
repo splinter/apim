@@ -18,6 +18,8 @@ require('/modules/store.js').exec(function (ctx) {
 
     caramel = require('caramel');
 
+    log.info('Entered assets controller');
+
     url = '/assets/' + type + '/?' + (tag ? 'tag=' + tag + '&' : '') + (query ? 'query=' + query + '&' : '');
 
     paging = store.assetsPaging(request);
@@ -97,6 +99,9 @@ require('/modules/store.js').exec(function (ctx) {
     }
 
     var rxtAttributes = require('/modules/util.js').getRXTAttributes(tenantId, type);
+
+    log.info('About to render assets');
+    log.info('Assets: '+stringify(assets));
 
     caramel.render({
         title: 'Store | Assets',

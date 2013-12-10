@@ -162,7 +162,9 @@ var assetManager = function (type, reg) {
         azzet = require('/modules/asset.js'),
         path = ASSETS_EXT_PATH + type + '/asset.js',
         manager = new azzet.Manager(reg, type);
+        log.info('obtaining assetManager');
     if (new File(path).isExists() && (asset = require(path)).hasOwnProperty('assetManager')) {
+        log.info('obtaining custom asset');
         manager = asset.assetManager(manager);
     }
     return manager;
@@ -428,6 +430,8 @@ Store.prototype.assets = function (type, paging) {
     var newPaging = PaginationFormBuilder(paging);
     //var assetz = this.assetManager(type).list(paging);
 
+    log.info('Query : '+stringify(options));
+    log.info('Type: '+type);
     var assetz = this.assetManager(type).search(options, newPaging);
 
 
