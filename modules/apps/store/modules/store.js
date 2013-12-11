@@ -432,8 +432,10 @@ Store.prototype.assets = function (type, paging) {
 
     log.info('Query : '+stringify(options));
     log.info('Type: '+type);
+
     var assetz = this.assetManager(type).search(options, newPaging);
 
+    log.info('Obtained assets');
 
     for (i = 0; i < assetz.length; i++) {
         assetz[i].indashboard = this.isuserasset(assetz[i].id, type);
@@ -609,6 +611,7 @@ Store.prototype.search = function (options, paging) {
     options = obtainViewQuery(options);
     var builtPaging = PaginationFormBuilder(paging);
     if (type) {
+        log.info('Calling search with options: '+stringify(options));
         var assetz = this.assetManager(type).search(options, builtPaging);
         for (i = 0; i < assetz.length; i++) {
             assetz[i].indashboard = this.isuserasset(assetz[i].id, type);
@@ -676,9 +679,10 @@ var obtainViewQuery = function (options) {
     var storeConfig = require('/config/store.json').lifeCycleBehaviour;
     var visibleStates = storeConfig.visibleIn || DEFAULT_ASSET_VIEW_STATE;
 
-    options[LIFECYCLE_STATE_PROPERTY] = visibleStates;
-
-    log.debug('options: ' + stringify(options));
+    //options[LIFECYCLE_STATE_PROPERTY] = visibleStates;
+    //Changed the query to check for overview_status as opposed to lifecycle state
+    options['overview_status']='CREATED';
+    log.info('options: ' + stringify(options));
 
 
     return options;
