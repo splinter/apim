@@ -6,7 +6,35 @@ var TENANT_STORE = 'tenant.store';
 
 var STORE_CONFIG_PATH = '/_system/config/store/configs/store.json';
 
-var TAGS_QUERY_PATH = '/_system/config/repository/components/org.wso2.carbon.registry/queries/allTags';
+//var STORE_TAGS_QUERY_PATH = '/_system/config/repository/components/org.wso2.carbon.registry/queries/allTags';
+var APIM_TAGS_QUERY_PATH="/_system/config/repository/components/org.wso2.carbon.registry/queries/tag-summary";
+
+var TAGS_QUERY_PATH=APIM_TAGS_QUERY_PATH;
+
+var STORE_TAG_QUERY="SELECT RT.REG_TAG_ID FROM REG_RESOURCE_TAG RT ORDER BY RT.REG_TAG_ID";
+
+var APIM_TAG_QUERY="SELECT"
++"    '/_system/governance/repository/components/org.wso2.carbon.governance' AS MOCK_PATH, "
++"    RT.REG_TAG_NAME AS TAG_NAME,  "
++"    COUNT(RT.REG_TAG_NAME) AS USED_COUNT "
++" FROM    REG_RESOURCE_TAG RRT, "
++"    REG_TAG RT,"
++"    REG_RESOURCE R, "
++"    REG_RESOURCE_PROPERTY RRP, "
++"    REG_PROPERTY RP "
++" WHERE    RT.REG_ID = RRT.REG_TAG_ID "
++"    AND R.REG_MEDIA_TYPE = 'application/vnd.wso2-api+xml' "
++"    AND RRT.REG_VERSION = R.REG_VERSION "
++"    AND RRP.REG_VERSION = R.REG_VERSION "
++"    AND RP.REG_NAME = 'STATUS' "
++"    AND RRP.REG_PROPERTY_ID = RP.REG_ID "
++"    AND (RP.REG_VALUE !='DEPRECATED' "
++"    AND RP.REG_VALUE !='CREATED' "
++"    AND RP.REG_VALUE !='BLOCKED' "
++"    AND RP.REG_VALUE !='RETIRED') "
++" GROUP BY    RT.REG_TAG_NAME";
+
+var TAG_QUERY=APIM_TAG_QUERY;
 
 //TODO: read from tenant config
 var ASSETS_PAGE_SIZE = 'assetsPageSize';
@@ -45,13 +73,25 @@ var init = function (options) {
             content: JSON.stringify(config),
             mediaType: 'application/json'
         });
-        system.put(TAGS_QUERY_PATH, {
+
+
+        /*system.put(TAGS_QUERY_PATH, {
             content: 'SELECT RT.REG_TAG_ID FROM REG_RESOURCE_TAG RT ORDER BY RT.REG_TAG_ID',
             mediaType: 'application/vnd.sql.query',
             properties: {
                 resultType: 'Tags'
             }
+        });  */
+
+        //Place the tag query during the tentant create
+        system.put(TAGS_QUERY_PATH, {
+            content: TAG_QUERY,
+            mediaType: 'application/vnd.sql.query',
+            properties: {
+                resultType: 'Tags'
+            }
         });
+
         roles = config.roles;
         for (role in roles) {
             if (roles.hasOwnProperty(role)) {
@@ -327,7 +367,10 @@ Store.prototype.tags = function (type) {
         registry = this.registry || this.servmod.anonRegistry(this.tenantId),
         tagz = [],
         tz = {};
+    log.info('querying for tags using query '+TAGS_QUERY_PATH);
+
     tags = registry.query(TAGS_QUERY_PATH);
+    log.info(tags);
     length = tags.length;
     if (type == undefined) {
         for (i = 0; i < length; i++) {
