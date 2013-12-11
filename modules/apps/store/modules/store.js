@@ -724,7 +724,7 @@ var obtainViewQuery = function (options) {
 
     //options[LIFECYCLE_STATE_PROPERTY] = visibleStates;
     //Changed the query to check for overview_status as opposed to lifecycle state
-    options['overview_status']='CREATED';
+    options['overview_status']=visibleStates;
     log.info('options: ' + stringify(options));
 
 

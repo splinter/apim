@@ -10,7 +10,7 @@
         "http": "%http.host%"
     },
     "lifeCycleBehaviour":{
-        "visibleIn":["Published"]
+        "visibleIn":"PUBLISHED"
     },
     "ssoConfiguration": {
         "enabled": true,
