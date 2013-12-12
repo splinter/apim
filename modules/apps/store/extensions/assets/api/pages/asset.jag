@@ -41,9 +41,6 @@ require('/modules/store.js').exec(function (ctx) {
 
     var rxtAttributes = utility.getRXTAttributes(tenantId, type);
 
-
-    log.info('Calling render');
-
     caramel.render({
         title: 'Store | ' + type,
         user: user,
