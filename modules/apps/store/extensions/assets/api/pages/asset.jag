@@ -30,8 +30,9 @@ require('/modules/store.js').exec(function (ctx) {
 
     //check asset LC state
     if(configs.lifeCycleBehaviour.visibleIn.indexOf(String(asset.lifecycleState), 0) < 0){
-        response.sendError(404, 'Requested page cannot be found');
-        return;
+        log.info('Lifecycle State checked failed.');
+       // response.sendError(404, 'Requested page cannot be found');
+       // return;
     }
 
     if (store.isuserasset(aid, type)) {
@@ -39,6 +40,9 @@ require('/modules/store.js').exec(function (ctx) {
     }
 
     var rxtAttributes = utility.getRXTAttributes(tenantId, type);
+
+
+    log.info('Calling render');
 
     caramel.render({
         title: 'Store | ' + type,
