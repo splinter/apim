@@ -10,6 +10,7 @@
         "http": "%http.host%"
     },
     "lifeCycleBehaviour":{
+        "lcAttributeName":"overview_status",
         "visibleIn":"PUBLISHED"
     },
     "ssoConfiguration": {

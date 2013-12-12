@@ -721,7 +721,7 @@ Store.prototype.rxtManager = function (type, session) {
 
 var LIFECYCLE_STATE_PROPERTY = 'lcState';
 var DEFAULT_ASSET_VIEW_STATE = 'Published'; //Unless specified otherwise, assets are always visible when Published
-
+var DEFAULT_LC_ATTRIBUTE_NAME= LIFECYCLE_STATE_PROPERTY;
 /*
  The function creates a query object to be used in the Manager.search
  based on the visibleIn property of the store.json.
@@ -732,12 +732,11 @@ var obtainViewQuery = function (options) {
 
     var storeConfig = require('/config/store.json').lifeCycleBehaviour;
     var visibleStates = storeConfig.visibleIn || DEFAULT_ASSET_VIEW_STATE;
+    var attributeName= storeConfig.lcAttributeName || DEFAULT_LC_ATTRIBUTE_NAME;
 
     //options[LIFECYCLE_STATE_PROPERTY] = visibleStates;
     //Changed the query to check for overview_status as opposed to lifecycle state
-    options['overview_status']=visibleStates;
-    log.info('options: ' + stringify(options));
-
+    options[attributeName]=visibleStates;
 
     return options;
 }
