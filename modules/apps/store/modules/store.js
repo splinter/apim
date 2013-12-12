@@ -6,13 +6,12 @@ var TENANT_STORE = 'tenant.store';
 
 var STORE_CONFIG_PATH = '/_system/config/store/configs/store.json';
 
-//var STORE_TAGS_QUERY_PATH = '/_system/config/repository/components/org.wso2.carbon.registry/queries/allTags';
+var STORE_TAGS_QUERY_PATH = '/_system/config/repository/components/org.wso2.carbon.registry/queries/allTags';
 var APIM_TAGS_QUERY_PATH="/_system/config/repository/components/org.wso2.carbon.registry/queries/tag-summary";
 
-var TAGS_QUERY_PATH=APIM_TAGS_QUERY_PATH;
+
 
 var STORE_TAG_QUERY="SELECT RT.REG_TAG_ID FROM REG_RESOURCE_TAG RT ORDER BY RT.REG_TAG_ID";
-
 var APIM_TAG_QUERY="SELECT"
 +"    '/_system/governance/repository/components/org.wso2.carbon.governance' AS MOCK_PATH, "
 +"    RT.REG_TAG_NAME AS TAG_NAME,  "
@@ -34,7 +33,8 @@ var APIM_TAG_QUERY="SELECT"
 +"    AND RP.REG_VALUE !='RETIRED') "
 +" GROUP BY    RT.REG_TAG_NAME";
 
-var TAG_QUERY=APIM_TAG_QUERY;
+var TAG_QUERY=STORE_TAG_QUERY;
+var TAGS_QUERY_PATH=STORE_TAGS_QUERY_PATH;
 
 //TODO: read from tenant config
 var ASSETS_PAGE_SIZE = 'assetsPageSize';
@@ -373,6 +373,7 @@ Store.prototype.tags = function (type) {
     log.info(tags);
     length = tags.length;
     if (type == undefined) {
+        log.info('type is not defined');
         for (i = 0; i < length; i++) {
             tag = tags[i].split(';')[1].split(':')[1];
             count = tz[tag];
@@ -380,8 +381,11 @@ Store.prototype.tags = function (type) {
             tz[tag] = count;
         }
     } else {
+
         for (i = 0; i < length; i++) {
+            log.info('Examining '+tags[i]);
             assetType = tags[i].split(';')[0].split('/')[3];
+            log.info('asset type: '+assetType);
             if (assetType != undefined) {
                 if (assetType.contains(type)) {
                     tag = tags[i].split(';')[1].split(':')[1];
@@ -414,6 +418,7 @@ Store.prototype.tags = function (type) {
      }
      }
      */
+    log.info(tagz);
     return tagz;
 };
 
