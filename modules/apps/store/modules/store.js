@@ -507,9 +507,15 @@ Store.prototype.tagged = function (type, tag, paging) {
     var length;
 
     //options['tag'] = tag;
-    //options = obtainViewQuery(options);
+
+    //Some asssets may not have a lifecycleState attribute, therefore the query is obtained
+    //from the obtainViewQuery function
+    options = obtainViewQuery(options);
+    options['tag']=tag;
+
+
     //TODO move this LCState to config
-    options = {"tag": tag, "lifecycleState": ["published"]};
+    //options = {"tag": tag, "lifecycleState": ["published"]};
 
     assets = this.assetManager(type).search(options, paging);
 
