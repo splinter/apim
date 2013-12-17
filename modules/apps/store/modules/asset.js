@@ -151,7 +151,6 @@ var DEFAULT_ASSET_VIEW_STATE = 'published';
 
 			return assets;
 		}
-
 		return [];
 	};
 

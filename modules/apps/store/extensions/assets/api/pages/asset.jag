@@ -54,8 +54,9 @@ require('/modules/store.js').exec(function (ctx) {
         var searchOptions={};
         var paging;
 
+        searchOptions['attributes']={};
         searchOptions=obtainViewQuery(searchOptions);
-        searchOptions[ATTR_PROVIDER]=provider;
+        searchOptions['attributes'][ATTR_PROVIDER]=provider;
 
         paging={start:0, count:10, sort:'recent'};
 
