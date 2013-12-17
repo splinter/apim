@@ -1,0 +1,11 @@
+<%
+    print('This is a custom page for API');
+    include('../modules/jagg/jagg.jag');
+    var log=new Log();
+
+    var getDocs=jagg.module('documentation').getAllDocumentations;
+
+    var docs=getDocs({provider:'admin',name:'test-api-2',version:'1.0.0'},'admin');
+
+    log.info(docs);
+%>
