@@ -41,6 +41,53 @@ require('/modules/store.js').exec(function (ctx) {
 
     var rxtAttributes = utility.getRXTAttributes(tenantId, type);
 
+    var ATTR_PROVIDER='overview_provider';
+
+    /*
+     The function obtains the assets published by the given provider
+     */
+    var getAssetsFromProvider=function(asset,store){
+
+        log.info('Type: '+asset.type);
+        var assetsFromProvider={};
+        var provider=asset.attributes[ATTR_PROVIDER];
+        var searchOptions={};
+        var paging;
+
+        searchOptions=obtainViewQuery(searchOptions);
+        searchOptions[ATTR_PROVIDER]=provider;
+
+        paging={start:0, count:10, sort:'recent'};
+
+        assetsFromProvider['overview_provider']=provider;
+        assetsFromProvider['type']=type;
+        log.info(searchOptions);
+        assetsFromProvider['assets']=store.search(searchOptions,paging)[asset.type]||[];
+
+        return assetsFromProvider;
+    }
+
+    var LIFECYCLE_STATE_PROPERTY = 'lcState';
+    var DEFAULT_ASSET_VIEW_STATE = 'Published'; //Unless specified otherwise, assets are always visible when Published
+    var DEFAULT_LC_ATTRIBUTE_NAME= LIFECYCLE_STATE_PROPERTY;
+
+    var obtainViewQuery = function (options) {
+
+        var storeConfig = require('/config/store.json').lifeCycleBehaviour;
+        var visibleStates = storeConfig.visibleIn || DEFAULT_ASSET_VIEW_STATE;
+        var attributeName= storeConfig.lcAttributeName || DEFAULT_LC_ATTRIBUTE_NAME;
+
+        //options[LIFECYCLE_STATE_PROPERTY] = visibleStates;
+        //Changed the query to check for overview_status as opposed to lifecycle state
+        options[attributeName]=visibleStates;
+
+        return options;
+    }
+
+    var assetsByProvider=getAssetsFromProvider(asset,store);
+
+    log.info('Assets by Provider: '+stringify(assetsByProvider));
+
     caramel.render({
         title: 'Store | ' + type,
         user: user,
@@ -70,7 +117,10 @@ require('/modules/store.js').exec(function (ctx) {
             }
         ],
         myAssets: { user: user, type: type, title: title },
-        recentAssets: store.recentAssets(type)
+        recentAssets: store.recentAssets(type) ,
+        assetsByProvider:assetsByProvider
     });
+
+
 }, request, response, session);
 %>

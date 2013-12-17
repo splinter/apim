@@ -37,10 +37,15 @@ var render = function(theme, data, meta, require) {
 			{
                 partial: 'recent-assets',
                 context: require('/helpers/asset.js').formatRatings(data.recentAssets)
-            }, {
+            },
+            {
 				partial : 'tags',
 				context : data.tags
-			}
+			},
+            {
+                partial: 'morefromprovider-widget',
+                context: data.assetsByProvider
+            }
 		]
 	});
 };
