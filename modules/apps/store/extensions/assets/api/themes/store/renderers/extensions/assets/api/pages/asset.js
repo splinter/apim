@@ -28,7 +28,12 @@ var render = function(theme, data, meta, require) {
                 type : data.type,
                 inDashboard : data.inDashboard,
                 embedURL : data.embedURL,
-                isSocial : data.isSocial
+                isSocial : data.isSocial,
+                tabs:{
+                    documentation:{
+                        data:data.documentation
+                    }
+                }
             })
         }],
 		right : [

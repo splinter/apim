@@ -1,5 +1,12 @@
 <%
 var caramel;
+var log = new Log();
+include('../modules/jagg/jagg.jag');
+var DocumentService = require('../services/documentation.js').serviceModule;
+var docsManager = new DocumentService.DocumentationService();
+docsManager.init(jagg, session);
+//var getDocs=jagg.module('documentation').getAllDocumentations;
+
 
 require('/modules/store.js').exec(function (ctx) {
     var asset, aid, title,
@@ -29,10 +36,10 @@ require('/modules/store.js').exec(function (ctx) {
     }
 
     //check asset LC state
-    if(configs.lifeCycleBehaviour.visibleIn.indexOf(String(asset.lifecycleState), 0) < 0){
+    if (configs.lifeCycleBehaviour.visibleIn.indexOf(String(asset.lifecycleState), 0) < 0) {
         log.info('Lifecycle State checked failed.');
-       // response.sendError(404, 'Requested page cannot be found');
-       // return;
+        // response.sendError(404, 'Requested page cannot be found');
+        // return;
     }
 
     if (store.isuserasset(aid, type)) {
@@ -41,55 +48,64 @@ require('/modules/store.js').exec(function (ctx) {
 
     var rxtAttributes = utility.getRXTAttributes(tenantId, type);
 
-    var ATTR_PROVIDER='overview_provider';
+    var ATTR_PROVIDER = 'overview_provider';
     var LIFECYCLE_STATE_PROPERTY = 'lcState';
     var DEFAULT_ASSET_VIEW_STATE = 'Published'; //Unless specified otherwise, assets are always visible when Published
-    var DEFAULT_LC_ATTRIBUTE_NAME= LIFECYCLE_STATE_PROPERTY;
+    var DEFAULT_LC_ATTRIBUTE_NAME = LIFECYCLE_STATE_PROPERTY;
 
     /*
      The function obtains the assets published by the given provider
      */
-    var getAssetsFromProvider=function(asset,store){
+    var getAssetsFromProvider = function (asset, store) {
 
-        log.info('Type: '+asset.type);
-        var assetsFromProvider={};
-        var provider=asset.attributes[ATTR_PROVIDER];
-        var searchOptions={};
+        log.info('Type: ' + asset.type);
+        var assetsFromProvider = {};
+        var provider = asset.attributes[ATTR_PROVIDER];
+        var searchOptions = {};
         var paging;
 
-        searchOptions['attributes']={};
-        searchOptions=obtainViewQuery(searchOptions);
-        searchOptions['attributes'][ATTR_PROVIDER]=provider;
+        searchOptions['attributes'] = {};
+        searchOptions = obtainViewQuery(searchOptions);
+        searchOptions['attributes'][ATTR_PROVIDER] = provider;
 
-        paging={start:0, count:10, sort:'recent'};
+        paging = {start: 0, count: 10, sort: 'recent'};
 
-        assetsFromProvider['overview_provider']=provider;
-        assetsFromProvider['type']=type;
+        assetsFromProvider['overview_provider'] = provider;
+        assetsFromProvider['type'] = type;
         log.info(searchOptions);
-        assetsFromProvider['assets']=store.search(searchOptions,paging)[asset.type]||[];
+        assetsFromProvider['assets'] = store.search(searchOptions, paging)[asset.type] || [];
 
         return assetsFromProvider;
     }
 
     /*
-    The function obtains the query used to search for assets
-    */
+     The function obtains the query used to search for assets
+     */
     var obtainViewQuery = function (options) {
 
         var storeConfig = require('/config/store.json').lifeCycleBehaviour;
         var visibleStates = storeConfig.visibleIn || DEFAULT_ASSET_VIEW_STATE;
-        var attributeName= storeConfig.lcAttributeName || DEFAULT_LC_ATTRIBUTE_NAME;
+        var attributeName = storeConfig.lcAttributeName || DEFAULT_LC_ATTRIBUTE_NAME;
 
         //options[LIFECYCLE_STATE_PROPERTY] = visibleStates;
         //Changed the query to check for overview_status as opposed to lifecycle state
-        options[attributeName]=visibleStates;
+        options[attributeName] = visibleStates;
 
         return options;
     }
 
-    var assetsByProvider=getAssetsFromProvider(asset,store);
+    var assetsByProvider = getAssetsFromProvider(asset, store);
 
-    log.info('Assets by Provider: '+stringify(assetsByProvider));
+    log.info('DOCUMENTATION: ');
+
+    var docs = docsManager.getAllDocumentation(asset.attributes.overview_provider,
+            asset.attributes.overview_name,
+            asset.attributes.overview_version,
+            'admin');
+
+    // var docs=getDocs({provider:'admin',name:'test-api-2',version:'1.0.0'},'admin');
+
+    // log.info(docs);
 
     caramel.render({
         title: 'Store | ' + type,
@@ -120,8 +136,9 @@ require('/modules/store.js').exec(function (ctx) {
             }
         ],
         myAssets: { user: user, type: type, title: title },
-        recentAssets: store.recentAssets(type) ,
-        assetsByProvider:assetsByProvider
+        recentAssets: store.recentAssets(type),
+        assetsByProvider: assetsByProvider,
+        documentation: docs
     });
 
 

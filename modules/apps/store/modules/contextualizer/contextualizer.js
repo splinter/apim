@@ -27,8 +27,13 @@ var Contextualizer;
         });
     };
 
+    var readServiceConfiguration=function(serviceConfigFilePath){
+
+    };
+
     function Context(options){
-        this.init(options);
+        this.serviceDirectory='/services';
+        this.init({path:serviceDirectory});
     }
 
     Context.prototype.init=function(options){
