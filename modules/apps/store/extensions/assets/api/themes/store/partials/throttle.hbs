@@ -1,1 +1,31 @@
-<p>This is the throttling block !</p>
+
+{{#with tabs.apiData.data}}
+<table class='table'>
+    <thead>
+    <th>{{t "URL Prefix"}}</th>
+    <th>{{t "URL Pattern"}}</th>
+    <th>{{t "Throttling Limit"}}</th>
+    </thead>
+    <tbody>
+    {{#each uriTemplates}}
+    <tr>
+
+        <td>{{../context}}/{{../version}}</td>
+
+        <td>
+            {{context}}
+        </td>
+        <td>
+            {{#each methodDetails}}
+
+                <p>{{methodName}} {{details.tierDescription}}</p>
+
+            {{/each}}
+        </td>
+
+
+    </tr>
+    {{/each}}
+    </tbody>
+</table>
+{{/with}}

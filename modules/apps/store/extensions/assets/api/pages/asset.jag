@@ -5,6 +5,10 @@ include('../modules/jagg/jagg.jag');
 var DocumentService = require('../services/documentation.js').serviceModule;
 var docsManager = new DocumentService.DocumentationService();
 docsManager.init(jagg, session);
+
+var APIInformationService=require('../services/api-information.js').serviceModule;
+var apiInfoManager=new APIInformationService.APIInformationService();
+apiInfoManager.init(jagg,session);
 //var getDocs=jagg.module('documentation').getAllDocumentations;
 
 
@@ -107,6 +111,13 @@ require('/modules/store.js').exec(function (ctx) {
 
     // log.info(docs);
 
+    var apiData=apiInfoManager.getAPIDescription(asset.attributes.overview_provider,
+           asset.attributes.overview_name,
+           asset.attributes.overview_version);
+
+    log.info('api Data: ');
+    log.info(apiData);
+
     caramel.render({
         title: 'Store | ' + type,
         user: user,
@@ -138,7 +149,8 @@ require('/modules/store.js').exec(function (ctx) {
         myAssets: { user: user, type: type, title: title },
         recentAssets: store.recentAssets(type),
         assetsByProvider: assetsByProvider,
-        documentation: docs
+        documentation: docs,
+        apiData:apiData
     });
 
 
