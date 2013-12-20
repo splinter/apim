@@ -15,6 +15,13 @@
         </td>
         <td>
             <!--- View Content/Download link -->
+            {{#if isFile}}
+                 <a class='icon-download'></a> <a href='{{filePath}}'>Download</a>
+            {{/if}}
+
+            {{#if isUrl}}
+                <a class='icon-globe'></a> <a href='{{sourceUrl}}'>View Content</a>
+            {{/if}}
 
         </td>
 
