@@ -4,7 +4,6 @@ var getAllDocumentations = function (api,user) {
             log = new Log(),
             store = jagg.module("manager").getAPIStoreObj();
 
-    log.info('getAllDocumentation called');
 
     try {
         documentations = store.getAllDocumentation(api.provider, api.name, api.version,user);
@@ -27,7 +26,6 @@ var getAllDocumentations = function (api,user) {
 var getInlineContent = function (provider,name, version, docName) {
     var doc,result, log = new Log(),
             store = jagg.module("manager").getAPIStoreObj();
-    log.info('getInlineContent called');
     try {
         result = store.getInlineContent(provider,name, version, docName);
         result=result[0];

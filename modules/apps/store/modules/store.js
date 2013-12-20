@@ -202,9 +202,9 @@ var assetManager = function (type, reg) {
         azzet = require('/modules/asset.js'),
         path = ASSETS_EXT_PATH + type + '/asset.js',
         manager = new azzet.Manager(reg, type);
-        log.info('obtaining assetManager');
+
     if (new File(path).isExists() && (asset = require(path)).hasOwnProperty('assetManager')) {
-        log.info('obtaining custom asset');
+
         manager = asset.assetManager(manager);
     }
     return manager;
@@ -367,13 +367,13 @@ Store.prototype.tags = function (type) {
         registry = this.registry || this.servmod.anonRegistry(this.tenantId),
         tagz = [],
         tz = {};
-    log.info('querying for tags using query '+TAGS_QUERY_PATH);
+
 
     tags = registry.query(TAGS_QUERY_PATH);
-    log.info(tags);
+
     length = tags.length;
     if (type == undefined) {
-        log.info('type is not defined');
+
         for (i = 0; i < length; i++) {
             tag = tags[i].split(';')[1].split(':')[1];
             count = tz[tag];
@@ -383,9 +383,9 @@ Store.prototype.tags = function (type) {
     } else {
 
         for (i = 0; i < length; i++) {
-            log.info('Examining '+tags[i]);
+
             assetType = tags[i].split(';')[0].split('/')[3];
-            log.info('asset type: '+assetType);
+
             if (assetType != undefined) {
                 if (assetType.contains(type)) {
                     tag = tags[i].split(';')[1].split(':')[1];
@@ -418,7 +418,7 @@ Store.prototype.tags = function (type) {
      }
      }
      */
-    log.info(tagz);
+
     return tagz;
 };
 
@@ -478,12 +478,7 @@ Store.prototype.assets = function (type, paging) {
     var newPaging = PaginationFormBuilder(paging);
     //var assetz = this.assetManager(type).list(paging);
 
-    log.info('Query : '+stringify(options));
-    log.info('Type: '+type);
-
     var assetz = this.assetManager(type).search(options, newPaging);
-
-    log.info('Obtained assets');
 
     for (i = 0; i < assetz.length; i++) {
         assetz[i].indashboard = this.isuserasset(assetz[i].id, type);
@@ -665,7 +660,6 @@ Store.prototype.search = function (options, paging) {
     options = obtainViewQuery(options);
     var builtPaging = PaginationFormBuilder(paging);
     if (type) {
-        log.info('Calling search with options: '+stringify(options));
         var assetz = this.assetManager(type).search(options, builtPaging);
         for (i = 0; i < assetz.length; i++) {
             assetz[i].indashboard = this.isuserasset(assetz[i].id, type);

@@ -37,8 +37,6 @@ var serviceModule = (function () {
         var documents = this.instance.getAllDocumentations(query, user);
 
         documents = sortDocumentsByType(documents);
-        log.info('PROCESSED');
-        log.info(documents);
         return documents;
     };
 
@@ -73,7 +71,6 @@ var serviceModule = (function () {
 
         //Check if there has been exception while retrieving the documents
         if(data.error!=false){
-            log.info('Unable to retrieve documents');
             throw documents.error;
         }
 
@@ -116,9 +113,6 @@ var serviceModule = (function () {
      */
     var assignToDocMap = function (docMap,type, doc) {
         var targetType=documentTypeMapping(type);
-
-        log.info('TYPE MAPPING');
-        log.info(documentTypeMapping(type));
 
         if(!docMap.hasOwnProperty(targetType)){
             targetType=DEFAULT_DOC_TYPE;

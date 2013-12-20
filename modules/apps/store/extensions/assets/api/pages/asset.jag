@@ -27,7 +27,7 @@ require('/modules/store.js').exec(function (ctx) {
 
     caramel = require('caramel');
 
-    log.info('Entered asset detail page');
+
 
     matcher.match('/{context}' + configs.assetsUrlPrefix + '/{type}/{aid}');
     aid = matcher.elements().aid;
@@ -40,11 +40,8 @@ require('/modules/store.js').exec(function (ctx) {
     }
 
     //check asset LC state
-    if (configs.lifeCycleBehaviour.visibleIn.indexOf(String(asset.lifecycleState), 0) < 0) {
-        log.info('Lifecycle State checked failed.');
-        // response.sendError(404, 'Requested page cannot be found');
-        // return;
-    }
+    //if (configs.lifeCycleBehaviour.visibleIn.indexOf(String(asset.lifecycleState), 0) < 0) {
+    //}
 
     if (store.isuserasset(aid, type)) {
         inDashboard = true;
@@ -62,7 +59,7 @@ require('/modules/store.js').exec(function (ctx) {
      */
     var getAssetsFromProvider = function (asset, store) {
 
-        log.info('Type: ' + asset.type);
+
         var assetsFromProvider = {};
         var provider = asset.attributes[ATTR_PROVIDER];
         var searchOptions = {};
@@ -76,7 +73,7 @@ require('/modules/store.js').exec(function (ctx) {
 
         assetsFromProvider['overview_provider'] = provider;
         assetsFromProvider['type'] = type;
-        log.info(searchOptions);
+
         assetsFromProvider['assets'] = store.search(searchOptions, paging)[asset.type] || [];
 
         return assetsFromProvider;
@@ -100,23 +97,14 @@ require('/modules/store.js').exec(function (ctx) {
 
     var assetsByProvider = getAssetsFromProvider(asset, store);
 
-    log.info('DOCUMENTATION: ');
-
     var docs = docsManager.getAllDocumentation(asset.attributes.overview_provider,
             asset.attributes.overview_name,
             asset.attributes.overview_version,
             'admin');
 
-    // var docs=getDocs({provider:'admin',name:'test-api-2',version:'1.0.0'},'admin');
-
-    // log.info(docs);
-
     var apiData=apiInfoManager.getAPIDescription(asset.attributes.overview_provider,
            asset.attributes.overview_name,
            asset.attributes.overview_version);
-
-    log.info('api Data: ');
-    log.info(apiData);
 
     caramel.render({
         title: 'Store | ' + type,

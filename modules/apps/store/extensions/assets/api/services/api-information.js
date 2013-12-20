@@ -13,16 +13,16 @@ var serviceModule = (function () {
     var URI_MAP_KEY_TIER = 'tier';
     var URI_MAP_KEY_AUTH = 'authType';
     var URI_MAP_KEY_TIERDESCRIPTION = 'tierDescription';
-    var API_CONTEXT_KEY='context';
-    var API_VERSION_KEY='version';
-    var API_URI_TEMPLATES_KEY='uriTemplates';
-    var API_UPDATED_KEY='updatedDate';
-    var API_SERVERURL_KEY='serverURL';
-    var API_DISCOVERYURL_KEY='discoveryURL';
-    var MSG_UNABLE_TO_GET_API_DATA='Unable to get API data';
-    var SERVER_URL_DESCRIPTION_INDEX=0;
-    var SERVER_URL_SANDBOX_INDEX=1;
-    var SERVER_URL_PRODUCTION_INDEX=2;
+    var API_CONTEXT_KEY = 'context';
+    var API_VERSION_KEY = 'version';
+    var API_URI_TEMPLATES_KEY = 'uriTemplates';
+    var API_UPDATED_KEY = 'updatedDate';
+    var API_SERVERURL_KEY = 'serverURL';
+    var API_DISCOVERYURL_KEY = 'discoveryURL';
+    var MSG_UNABLE_TO_GET_API_DATA = 'Unable to get API data';
+    var SERVER_URL_DESCRIPTION_INDEX = 0;
+    var SERVER_URL_SANDBOX_INDEX = 1;
+    var SERVER_URL_PRODUCTION_INDEX = 2;
 
 
     function APIInformationService() {
@@ -41,7 +41,7 @@ var serviceModule = (function () {
         var apiDescription = this.instance.getAPIDescription(query, user);
 
         //Check if an exception has occured during the method invocation
-        if(apiDescription.error!=false){
+        if (apiDescription.error != false) {
             throw apiDescription.error;
         }
 
@@ -50,7 +50,7 @@ var serviceModule = (function () {
         var uriTemplateMap = new UriTemplateMap(apiDescription.uriTemplates);
 
         addTierDescription(uriTemplateMap, tierMap);
-        return createDescriptionObject(apiDescription,uriTemplateMap.toArray());
+        return createDescriptionObject(apiDescription, uriTemplateMap.toArray());
     };
 
     APIInformationService.prototype.getTiers = function () {
@@ -67,30 +67,29 @@ var serviceModule = (function () {
     };
 
 
-
-    var createDescriptionObject=function(apiDescription,uriTemplates){
-        var map={};
-        map[API_CONTEXT_KEY]=apiDescription.api.context||MSG_UNABLE_TO_GET_API_DATA;
-        map[API_VERSION_KEY]=apiDescription.api.version||MSG_UNABLE_TO_GET_API_DATA;
-        map[API_URI_TEMPLATES_KEY]=uriTemplates;
-        map[API_UPDATED_KEY]=apiDescription.api.updatedDate||MSG_UNABLE_TO_GET_API_DATA;
-        map[API_SERVERURL_KEY]=readServerURLs(apiDescription.api.serverURL);
-        map[API_DISCOVERYURL_KEY]=apiDescription.api.discoveryURL||MSG_UNABLE_TO_GET_API_DATA;
+    var createDescriptionObject = function (apiDescription, uriTemplates) {
+        var map = {};
+        map[API_CONTEXT_KEY] = apiDescription.api.context || MSG_UNABLE_TO_GET_API_DATA;
+        map[API_VERSION_KEY] = apiDescription.api.version || MSG_UNABLE_TO_GET_API_DATA;
+        map[API_URI_TEMPLATES_KEY] = uriTemplates;
+        map[API_UPDATED_KEY] = apiDescription.api.updatedDate || MSG_UNABLE_TO_GET_API_DATA;
+        map[API_SERVERURL_KEY] = readServerURLs(apiDescription.api.serverURL);
+        map[API_DISCOVERYURL_KEY] = apiDescription.api.discoveryURL || MSG_UNABLE_TO_GET_API_DATA;
         return map;
     };
 
-    var readServerURLs=function(serverUrl){
-        var serverUrl=serverUrl||'';
-        var components=serverUrl.split(',');
+    var readServerURLs = function (serverUrl) {
+        var serverUrl = serverUrl || '';
+        var components = serverUrl.split(',');
         return{
-            description:components[SERVER_URL_DESCRIPTION_INDEX]?
-                components[SERVER_URL_DESCRIPTION_INDEX]:
+            description: components[SERVER_URL_DESCRIPTION_INDEX] ?
+                components[SERVER_URL_DESCRIPTION_INDEX] :
                 MSG_UNABLE_TO_GET_API_DATA,
-            sandboxURL:components[SERVER_URL_SANDBOX_INDEX]?
-                components[SERVER_URL_SANDBOX_INDEX]:
+            sandboxURL: components[SERVER_URL_SANDBOX_INDEX] ?
+                components[SERVER_URL_SANDBOX_INDEX] :
                 MSG_UNABLE_TO_GET_API_DATA,
-            productionURL:components[SERVER_URL_PRODUCTION_INDEX]?
-                components[SERVER_URL_PRODUCTION_INDEX]:
+            productionURL: components[SERVER_URL_PRODUCTION_INDEX] ?
+                components[SERVER_URL_PRODUCTION_INDEX] :
                 MSG_UNABLE_TO_GET_API_DATA
         };
     };
@@ -180,7 +179,7 @@ var serviceModule = (function () {
         var templates = [];
         var methodDetails;
         for (var contextName in this.map) {
-            methodDetails=this.getMethodArray(this.map[contextName]);
+            methodDetails = this.getMethodArray(this.map[contextName]);
             templates.push({
                 context: contextName,
                 methodDetails: methodDetails
@@ -190,12 +189,12 @@ var serviceModule = (function () {
         return templates;
     };
 
-    UriTemplateMap.prototype.getMethodArray=function(methodDetails){
-        var methodDetailsArray=[];
-        for(var methodName in methodDetails){
+    UriTemplateMap.prototype.getMethodArray = function (methodDetails) {
+        var methodDetailsArray = [];
+        for (var methodName in methodDetails) {
             methodDetailsArray.push({
-                methodName:methodName,
-                details:methodDetails[methodName]
+                methodName: methodName,
+                details: methodDetails[methodName]
             });
         }
 
@@ -248,20 +247,15 @@ var serviceModule = (function () {
         var methodName;
         var methodDetails;
 
-        log.info('Starting to add tier descriptions ');
 
         for (var contextIndex in contextEntries) {
 
             context = contextEntries[contextIndex];
             methods = uriTemplateMap.getMethodTypes(context);
 
-            log.info('Adding tier information to ' + context);
-
             for (var methodIndex in methods) {
 
                 methodName = methods[methodIndex];
-
-                log.info('Adding tier information for method: ' + methodName);
 
                 methodDetails = uriTemplateMap.getMethodDetails(context, methodName);
                 tierDescription = tierMap.getTierDescription(methodDetails.tier);

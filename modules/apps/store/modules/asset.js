@@ -125,10 +125,10 @@ var DEFAULT_ASSET_VIEW_STATE = 'published';
 
 			//TODO need proper way to distinguish search and parameter search
 			if(options.attributes.length != null){
-                log.info('case 1');
+
 				options.attributes = {"overview_name":options.attributes,"lcState":configs.lifeCycleBehaviour.visibleIn};
 			}else{
-                log.info('case 2 -disabling lcState');
+
                 //Removed adding lcState as APIM does not use the Registry Lifecycle
 				//options.attributes["lcState"] = configs.lifeCycleBehaviour.visibleIn;
 			}
@@ -254,7 +254,6 @@ var DEFAULT_ASSET_VIEW_STATE = 'published';
     };
 
     Manager.prototype.search = function (options, paging) {
-        log.info('Calling search with options: '+stringify(options));
         return loadRatings(this, search(this, options,paging), paging);
     };
 
