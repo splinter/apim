@@ -1,3 +1,8 @@
+/*
+Description: This module is responsible for retrieving data about APIs
+             To this end it supplies the APIInformationService class
+
+ */
 var serviceModule = (function () {
 
     var log = new Log();
@@ -24,17 +29,33 @@ var serviceModule = (function () {
     var SERVER_URL_SANDBOX_INDEX = 1;
     var SERVER_URL_PRODUCTION_INDEX = 2;
 
-
+    /*
+    The class wraps the functionality of the api module and returns
+    tier and api descriptions
+     */
     function APIInformationService() {
         this.instance = null;
         this.user = null;
 
     }
 
+    /*
+    The method is required to initialize the api module used to make the
+    data retrieval calls
+     */
     APIInformationService.prototype.init = function (context, session) {
         this.instance = context.module('api');
     };
 
+    /*
+    The method is used to obtain details about a given api
+    @assetProvider: The API provider
+    @assetName: The name of the API
+    @assetVersion: The version of the API
+    @ofUser: This is an optional parameter which specified the user.If a value is not provided then name
+            is taken from the session
+    @returns: A JSON object containing information on the API
+     */
     APIInformationService.prototype.getAPIDescription = function (assetProvider, assetName, assetVersion, ofUser) {
         var query = getQuery(assetProvider, assetName, assetVersion);
         var user = ofUser || this.user;
@@ -53,10 +74,15 @@ var serviceModule = (function () {
         return createDescriptionObject(apiDescription, uriTemplateMap.toArray());
     };
 
+    /*
+    The method returns an array containing tier information
+    @returns: An array containing JSON objects with information on the different tiers
+     */
     APIInformationService.prototype.getTiers = function () {
         var tiers = this.instance.getTiers();
         return tiers;
     };
+
 
     var getQuery = function (assetProvider, assetName, assetVersion) {
         var query = {};
@@ -94,11 +120,19 @@ var serviceModule = (function () {
         };
     };
 
+    /*
+    The class is used to organize information on the different API tiers
+    for easy access
+     */
     function TierMap(tiersArray) {
         this.map = {};
         initTierMap(tiersArray, this.map);
     }
 
+    /*
+    The method returns the description of a given tier.
+    @returns: A string containing the tier description.If the tier is not valid then an empty string is provided
+     */
     TierMap.prototype.getTierDescription = function (tierName) {
         if (this.map.hasOwnProperty(tierName)) {
             return this.map[tierName];
@@ -117,6 +151,9 @@ var serviceModule = (function () {
         }
     };
 
+    /*
+    The class is used to organize uri templates by a context
+     */
     function UriTemplateMap(uriTemplateObj) {
         this.map = {};
         initUriTemplates(uriTemplateObj, this.map);
