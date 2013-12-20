@@ -106,6 +106,7 @@ require('/modules/store.js').exec(function (ctx) {
            asset.attributes.overview_name,
            asset.attributes.overview_version);
 
+
     caramel.render({
         title: 'Store | ' + type,
         user: user,

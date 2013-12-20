@@ -7,7 +7,6 @@ var getAllDocumentations = function (api,user) {
 
     try {
         documentations = store.getAllDocumentation(api.provider, api.name, api.version,user);
-	log.info(documentations);
         if (log.isDebugEnabled()) {
             log.debug("getAllDocumentation : " + stringify(documentations));
         }
