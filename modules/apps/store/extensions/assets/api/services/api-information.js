@@ -74,7 +74,7 @@ var serviceModule = (function () {
         map[API_URI_TEMPLATES_KEY] = uriTemplates;
         map[API_UPDATED_KEY] = apiDescription.api.updatedDate || MSG_UNABLE_TO_GET_API_DATA;
         map[API_SERVERURL_KEY] = readServerURLs(apiDescription.api.serverURL);
-        map[API_DISCOVERYURL_KEY] = apiDescription.api.discoveryURL || MSG_UNABLE_TO_GET_API_DATA;
+        map[API_DISCOVERYURL_KEY] = apiDescription.discoveryURL || MSG_UNABLE_TO_GET_API_DATA;
         return map;
     };
 
