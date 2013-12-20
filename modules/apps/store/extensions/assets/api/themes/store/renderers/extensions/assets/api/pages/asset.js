@@ -32,11 +32,9 @@ var render = function(theme, data, meta, require) {
                 tabs:{
                     documentation:{
                         data:data.documentation
-                    },
-                    apiData:{
-                        data:data.apiData
                     }
-                }
+                },
+                apiData:data.apiData
             })
         }],
 		right : [

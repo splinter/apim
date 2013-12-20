@@ -2,6 +2,7 @@
     var isSocial = ('{{isSocial}}' == 'true');
 </script>
 <div class="asset-description">
+
     {{#with asset}}
     {{#attributes}}
     <div class="asset-description-header">
@@ -17,6 +18,7 @@
                     <small> {{t "Version"}} {{overview_version}}</small>
                     <small> {{t "by"}} {{overview_provider}}</small>
                     <small> {{t "status"}} : {{overview_status}}</small>
+                    <small>{{t "updated"}} : {{apiData.updatedDate}}</small>
 					<span class="asset-rating">
                             <div style="width:{{../rating.ratingPx}}px"></div>
                     </span>

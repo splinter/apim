@@ -1,10 +1,11 @@
 <div>
-    {{#with asset}}
+    {{#with apiData.serverURL}}
     <b>URLSs:</b>
-    <p><b>Production and Sandbox</b></p>
+
+    <p><b>{{description}}</b></p>
     <ul>
-        <li>http://{{attributes.overview_context}}/{{attributes.overview_version}}</li>
-        <li>https://{{attributes.overview_context}}/{{attributes.overview_version}}</li>
+        <li>{{sandboxURL}}</li>
+        <li>{{productionURL}}</li>
     </ul>
     {{/with}}
 </div>
