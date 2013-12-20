@@ -16,7 +16,7 @@ $(function () {
     var discoveryUrl = $(CONTAINER_ID).data(DATA_DISCOVERYURL_KEY) || null;
 
     //Support for IE
-    var console = (typeof console == undefined) ? {log: function (msg) {
+    console = (typeof console == undefined) ? {log: function (msg) {
     }} : console;
 
     //Do not load swagger if there is no discovery URL
