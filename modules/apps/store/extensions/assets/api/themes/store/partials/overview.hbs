@@ -1,11 +1,11 @@
 <div>
     {{#with apiData.serverURL}}
-    <b>URLSs:</b>
+    <legend>URLSs:</legend>
 
     <p><b>{{description}}</b></p>
     <ul>
-        <li>{{sandboxURL}}</li>
-        <li>{{productionURL}}</li>
+        <li><a class='icon-globe'></a> {{sandboxURL}}</li>
+        <li><a class='icon-wrench'></a>{{productionURL}}</li>
     </ul>
     {{/with}}
 </div>
