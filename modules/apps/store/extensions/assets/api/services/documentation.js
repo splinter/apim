@@ -48,8 +48,6 @@ var serviceModule = (function () {
         return query;
     }
 
-
-
     var createDocumentMap=function(){
        var map={};
        var key;
