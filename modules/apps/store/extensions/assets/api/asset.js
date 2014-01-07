@@ -9,6 +9,11 @@ var assetLinks=function(user){
                  title:'Custom',
                  url:'custom',
                  path:'custom.jag'
+            } ,
+            {
+                title:'My Applications',
+                url:'myapps',
+                path:'myapps.jag'
             }
         ]
     }

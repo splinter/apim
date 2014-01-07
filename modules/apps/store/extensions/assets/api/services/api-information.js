@@ -1,7 +1,8 @@
 /*
  Description: This module is responsible for retrieving data about APIs
  To this end it supplies the APIInformationService class
-
+ Filename: api-information.js
+ Created Date: 7/1/2013
  */
 var serviceModule = (function () {
 
