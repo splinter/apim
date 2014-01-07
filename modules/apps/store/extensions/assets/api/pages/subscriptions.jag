@@ -1,0 +1,7 @@
+<%
+  var caramel;
+
+   caramel=require('caramel');
+
+   caramel.render({},request,response,session);
+%>
