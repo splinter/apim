@@ -9,6 +9,11 @@ var assetLinks=function(user){
                  title:'Custom',
                  url:'custom',
                  path:'custom.jag'
+            } ,
+            {
+                title:'Subscriptions',
+                url:'subscriptions',
+                path:'subscriptions.jag'
             }
         ]
     }
