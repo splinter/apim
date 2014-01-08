@@ -1,9 +1,17 @@
 <%
 var caramel;
+var AppInformationService;
+var appInfoApi;
 
+include('../modules/jagg/jagg.jag');
 
 caramel=require('caramel');
+AppService=require('../services/app.js').serviceModule;
+appApi=new AppService.AppService();
 
+appApi.init( jagg,session);
+
+appApi.getApplications('admin');
 
 caramel.render({},request,response,session);
 %>

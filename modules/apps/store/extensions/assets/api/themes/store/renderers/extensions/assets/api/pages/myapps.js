@@ -3,7 +3,17 @@ var render = function (theme, data, meta, require) {
 
     log.info('Rendering myapps');
     theme('2-column-right',{
-        title:'test',
+        title:'My Applications',
+        header:[
+            {
+                partial:'header',
+                context: {}
+            },
+            {
+                partial:'navigation',
+                context:{}
+            }
+        ],
         body:[
             {
                 partial:'myapps',
