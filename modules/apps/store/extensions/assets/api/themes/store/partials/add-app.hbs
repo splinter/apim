@@ -3,7 +3,7 @@
     <h4>Add New Application</h4>
     <hr/>
 
-    <form class='form-horizontal well'>
+    <form class='form-horizontal well' id='addAppForm'>
 
         <div class='control-group'>
             <label class='control-label'>{{t "Name"}}</label>
@@ -18,7 +18,7 @@
 
             <div class='controls'>
 
-                <select>
+                <select id='appTier'>
                     {{#each tiers}}
                     <option>{{tierName}}</option>
                     {{/each}}
@@ -52,7 +52,7 @@
 
         <!--Save button-->
         <div class='form-actions'>
-            <input type='button' value='Add' class='btn btn-primary' id='btn-add-app'/>
+            <input type='button' value='Add' class='btn btn-primary' id='btnAddApp'/>
             <input type='reset' value='Cancel' class='btn'/>
         </div>
 
