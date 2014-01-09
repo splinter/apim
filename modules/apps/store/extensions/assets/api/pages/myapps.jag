@@ -4,6 +4,8 @@ var AppService;
 var ApiService;
 var appInfoApi;
 var apiInfoApi;
+var apps;
+var tiers;
 var log=new Log();
 
 include('../modules/jagg/jagg.jag');
@@ -19,13 +21,13 @@ appApi.init(jagg, session);
 apiInfoApi.init(jagg, session);
 
 
-appApi.getApplications('admin');
-var tiers=apiInfoApi.getTiers();
+apps=appApi.getApplications('admin');
+tiers=apiInfoApi.getTiers();
 
-log.info(tiers);
 
 caramel.render({
-    tiers:tiers
+    tiers:tiers,
+    apps:apps
 }, request, response, session);
 
 

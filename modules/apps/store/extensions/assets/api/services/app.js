@@ -17,14 +17,17 @@ var serviceModule=(function(){
 
     AppService.prototype.getApplications=function(username){
         var result=this.instance.getApplications(username);
-        log.info(result);
+        return processAppsList(result);
     };
 
     AppService.prototype.addApplication=function(options){
 
         var result= this.instance.addApplication(options.username,options.application,options.tier,
         options.callbackUrl,options.description);
-        log.info(result);
+    };
+
+    var processAppsList=function(apps){
+        return [];
     };
 
     return{

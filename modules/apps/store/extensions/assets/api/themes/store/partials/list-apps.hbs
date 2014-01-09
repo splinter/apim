@@ -8,6 +8,33 @@
         <th>Actions</th>
         <th></th>
         </thead>
-        <tbody></tbody>
+        <tbody>
+        {{#each apps}}
+        <tr>
+            <td>
+                Test App
+                {{ appName}}
+            </td>
+            <td>
+                Gold
+                {{ appTier}}
+            </td>
+            <td>
+                Test Url
+                {{ appCallbackUrl}}
+            </td>
+            <td>
+                This is a test App
+                {{ appDescription}}
+            </td>
+            <td>
+                <a class='icon-edit'> Edit </a>
+            </td>
+            <td>
+                <a class='icon-trash'> Delete </a>
+            </td>
+        </tr>
+        {{/each}}
+        </tbody>
     </table>
 </div>
