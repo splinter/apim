@@ -1,17 +1,35 @@
 <%
 var caramel;
-var AppInformationService;
+var AppService;
+var ApiService;
 var appInfoApi;
+var apiInfoApi;
+var log=new Log();
 
 include('../modules/jagg/jagg.jag');
 
-caramel=require('caramel');
-AppService=require('../services/app.js').serviceModule;
-appApi=new AppService.AppService();
+caramel = require('caramel');
+AppService = require(getServiceDir('app.js')).serviceModule;
+ApiService = require(getServiceDir('api-information.js')).serviceModule;
 
-appApi.init( jagg,session);
+appApi = new AppService.AppService();
+apiInfoApi = new ApiService.APIInformationService();
+
+appApi.init(jagg, session);
+apiInfoApi.init(jagg, session);
+
 
 appApi.getApplications('admin');
+var tiers=apiInfoApi.getTiers();
 
-caramel.render({},request,response,session);
+log.info(tiers);
+
+caramel.render({
+    tiers:tiers
+}, request, response, session);
+
+
+function getServiceDir(serviceName) {
+    return '../services/' + serviceName;
+}
 %>

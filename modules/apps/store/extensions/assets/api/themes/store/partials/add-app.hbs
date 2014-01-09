@@ -1,7 +1,6 @@
 <div>
 
     <h4>Add New Application</h4>
-
     <hr/>
 
     <form class='form-horizontal well'>
@@ -18,8 +17,14 @@
             <label class='control-label'>{{t "Throttling Tier"}}</label>
 
             <div class='controls'>
-                Throttling tier
 
+                <select>
+                    {{#each tiers}}
+                    <option>{{tierName}}</option>
+                    {{/each}}
+                </select>
+            </div>
+            <div class='controls'>
                 <a class='icon-info'></a>
                 <small>Applications are required to make API Subscriptions and consume them.You will be able to
                     subscribe these applications to APIs from the API details page.Requests made from this application
@@ -33,7 +38,7 @@
             <label class='control-label'>{{t "Callback URL"}}</label>
 
             <div class='controls'>
-                <input type='text' id='appCallbackURL'/>
+                <input class='input-xxlarge' type='text' id='appCallbackURL'/>
             </div>
         </div>
 
@@ -41,7 +46,7 @@
             <label class='control-label'>{{t "Description"}}</label>
 
             <div class='controls'>
-                <textarea id='appDescription'></textarea>
+                <textarea class='input-xxlarge' id='appDescription'></textarea>
             </div>
         </div>
 

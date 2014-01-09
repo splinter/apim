@@ -17,7 +17,7 @@ var render = function (theme, data, meta, require) {
         body:[
             {
                 partial:'myapps',
-                context:{name:'a'}
+                context:data
             }
         ]
     });

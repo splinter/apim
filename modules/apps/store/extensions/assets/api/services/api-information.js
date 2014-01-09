@@ -99,7 +99,7 @@ var serviceModule = (function () {
      */
     APIInformationService.prototype.getTiers = function () {
         var tiers = this.instance.getTiers();
-        return tiers;
+        return tiers.tiers;
     };
 
     /*
