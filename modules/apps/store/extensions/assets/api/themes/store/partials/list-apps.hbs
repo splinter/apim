@@ -1,40 +1,38 @@
 <div>
-    <table class='table'>
+    <table class='table' id='tableApps'>
         <thead>
         <th>Name</th>
         <th>Tier</th>
         <th>Callback URL</th>
         <th>Description</th>
-        <th>Actions</th>
-        <th></th>
         </thead>
         <tbody>
-        {{#each apps}}
+
         <tr>
             <td>
                 Test App
-                {{ appName}}
+
             </td>
             <td>
                 Gold
-                {{ appTier}}
+
             </td>
             <td>
                 Test Url
-                {{ appCallbackUrl}}
+
             </td>
             <td>
                 This is a test App
-                {{ appDescription}}
+
             </td>
-            <td>
+            <!--td>
                 <a class='icon-edit'> Edit </a>
             </td>
             <td>
                 <a class='icon-trash'> Delete </a>
-            </td>
+            </td-->
         </tr>
-        {{/each}}
+
         </tbody>
     </table>
 </div>
