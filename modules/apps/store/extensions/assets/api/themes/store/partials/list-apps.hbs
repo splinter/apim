@@ -8,22 +8,19 @@
         </thead>
         <tbody>
 
+        {{#each apps}}
         <tr>
             <td>
-                Test App
-
+                {{name}}
             </td>
             <td>
-                Gold
-
+                {{tier}}
             </td>
             <td>
-                Test Url
-
+                {{callbackUrl}}
             </td>
             <td>
-                This is a test App
-
+                {{description}}
             </td>
             <!--td>
                 <a class='icon-edit'> Edit </a>
@@ -32,6 +29,7 @@
                 <a class='icon-trash'> Delete </a>
             </td-->
         </tr>
+        {{/each}}
 
         </tbody>
     </table>

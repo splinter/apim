@@ -17,7 +17,13 @@ var serviceModule=(function(){
 
     AppService.prototype.getApplications=function(username){
         var result=this.instance.getApplications(username);
-        return processAppsList(result);
+
+        if(result.error){
+            log.info('Unable to obtain applications of the provided user: '+username);
+            throw result.message;
+        }
+
+        return processAppsList(result.applications);
     };
 
     AppService.prototype.addApplication=function(options){
@@ -26,8 +32,11 @@ var serviceModule=(function(){
         options.callbackUrl,options.description);
     };
 
+    /*
+    Used to process the applications array
+     */
     var processAppsList=function(apps){
-        return [];
+        return apps;
     };
 
     return{

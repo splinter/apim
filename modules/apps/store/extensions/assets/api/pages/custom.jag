@@ -8,7 +8,11 @@ var log = new Log();
  var docs=getDocs({provider:'admin',name:'test-api-2',version:'1.0.0'},'admin');
 
  log.info(docs);  */
+
+
+/*
 AppService = require('../services/app.js').serviceModule;
+
 appApi = new AppService.AppService();
 
 appApi.init(jagg,session);
@@ -19,6 +23,24 @@ appApi.addApplication({
     tier: 'Gold',
     description: 'This is a test application'
 });
+*/
 
+
+var AuthService=require('../services/authentication.js').serviceModule;
+
+var authenticator=new AuthService.Authenticator();
+
+authenticator.init(jagg,session);
+
+//authenticator.login({username:'admin',password: 'admin',tenant:null});
+//authenticator.logout();
+
+var AppService = require('../services/app.js').serviceModule;
+
+appApi = new AppService.AppService();
+
+appApi.init(jagg,session);
+
+appApi.getApplications('admin');
 
 %>
