@@ -32,7 +32,7 @@ var authenticator=new AuthService.Authenticator();
 
 authenticator.init(jagg,session);
 
-//authenticator.login({username:'admin',password: 'admin',tenant:null});
+authenticator.login({username:'admin',password: 'admin',tenant:null});
 //authenticator.logout();
 
 var AppService = require('../services/app.js').serviceModule;
@@ -40,6 +40,14 @@ var AppService = require('../services/app.js').serviceModule;
 appApi = new AppService.AppService();
 
 appApi.init(jagg,session);
+
+appApi.addApplication({
+    username: 'admin',
+    application: 'test2',
+    tier: 'Gold',
+    callbackUrl:'',
+    description: 'This is a test application'
+});
 
 appApi.getApplications('admin');
 

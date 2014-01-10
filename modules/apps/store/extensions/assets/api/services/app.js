@@ -5,6 +5,7 @@ Created Date: 7/1/2013
  */
 var serviceModule=(function(){
     var log=new Log('app service');
+    var DEFAULT_FIELD_EMPTY_MSG='Not Specified';
 
     function AppService(){
         this.instance=null;
@@ -30,12 +31,32 @@ var serviceModule=(function(){
 
         var result= this.instance.addApplication(options.username,options.application,options.tier,
         options.callbackUrl,options.description);
+
+        log.info(result);
     };
 
     /*
     Used to process the applications array
      */
     var processAppsList=function(apps){
+        log.info(apps);
+
+        var app;
+
+        //Go through each app in the array
+        for(var index in apps){
+            app=apps[index];
+
+            //Inspect each property
+            for(var key in app){
+
+                //Assign a default value if a value is not found
+                 if((app[key]==null)||(typeof app[key] ==undefined)){
+                     app[key]=DEFAULT_FIELD_EMPTY_MSG;
+                 }
+            }
+        }
+
         return apps;
     };
 

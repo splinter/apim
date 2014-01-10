@@ -33,6 +33,9 @@ var serviceModule = (function () {
             userData['isSuperTenant'] = result.isSuperTenant;
             userData['cookie'] = result.cookie;
             this.context.setUser(userData);
+
+            log.info('********User Data *************');
+            log.info(this.context.getUser());
         }
 
     };
