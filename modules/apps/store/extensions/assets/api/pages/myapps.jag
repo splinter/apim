@@ -13,35 +13,43 @@ var log=new Log();
 
 include('../modules/jagg/jagg.jag');
 
-caramel = require('caramel');
-AppService = require(getServiceDir('app.js')).serviceModule;
-ApiService = require(getServiceDir('api-information.js')).serviceModule;
-AuthService=require(getServiceDir('authentication.js')).serviceModule;
+require('/modules/store.js').exec(function (ctx) {
+    var store = ctx.store;
+    var recentAssets=store.recentAssets('api');
 
-authenticator=new AuthService.Authenticator();
+    caramel = require('caramel');
+    AppService = require(getServiceDir('app.js')).serviceModule;
+    ApiService = require(getServiceDir('api-information.js')).serviceModule;
+    AuthService=require(getServiceDir('authentication.js')).serviceModule;
 
-authenticator.init(jagg,session);
+    authenticator=new AuthService.Authenticator();
 
-appApi = new AppService.AppService();
-apiInfoApi = new ApiService.APIInformationService();
+    authenticator.init(jagg,session);
 
-appApi.init(jagg, session);
-apiInfoApi.init(jagg, session);
+    appApi = new AppService.AppService();
+    apiInfoApi = new ApiService.APIInformationService();
+
+    appApi.init(jagg, session);
+    apiInfoApi.init(jagg, session);
 
 
-apps=appApi.getApplications('admin');
-tiers=apiInfoApi.getTiers();
+    apps=appApi.getApplications('admin');
+    tiers=apiInfoApi.getTiers();
 
-userData=authenticator.getLoggedInUser();
+    userData=authenticator.getLoggedInUser();
 
-caramel.render({
-    tiers:tiers,
-    header:{
-        user:userData
-    },
-    apps:apps
-}, request, response, session);
+    caramel.render({
+        tiers:tiers,
+        header:{
+            user:userData
+        },
+        apps:apps ,
+        recentAssets:recentAssets
+    });
 
+
+
+},request,response,session);
 
 function getServiceDir(serviceName) {
     return '../services/' + serviceName;

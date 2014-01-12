@@ -31,16 +31,12 @@ var serviceModule=(function(){
 
         var result= this.instance.addApplication(options.username,options.application,options.tier,
         options.callbackUrl,options.description);
-
-        log.info(result);
     };
 
     /*
     Used to process the applications array
      */
     var processAppsList=function(apps){
-        log.info(apps);
-
         var app;
 
         //Go through each app in the array
