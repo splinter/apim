@@ -44,6 +44,10 @@ var serviceModule = (function () {
         this.context.setUser(null);
     };
 
+    Authenticator.prototype.getLoggedInUser=function(options){
+        return this.context.getUser();
+    };
+
     return {
         Authenticator: Authenticator
     };

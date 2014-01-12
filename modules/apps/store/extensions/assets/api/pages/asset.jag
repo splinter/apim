@@ -1,5 +1,7 @@
 <%
 var caramel;
+var authService;
+var authenticator;
 var log = new Log();
 include('../modules/jagg/jagg.jag');
 var DocumentService = require('../services/documentation.js').serviceModule;
@@ -9,6 +11,12 @@ docsManager.init(jagg, session);
 var APIInformationService=require('../services/api-information.js').serviceModule;
 var apiInfoManager=new APIInformationService.APIInformationService();
 apiInfoManager.init(jagg,session);
+
+AuthService=require(getServiceDir('authentication.js')).serviceModule;
+
+authenticator=new AuthService.Authenticator();
+
+authenticator.init(jagg,session);
 //var getDocs=jagg.module('documentation').getAllDocumentations;
 
 
@@ -107,6 +115,8 @@ require('/modules/store.js').exec(function (ctx) {
            asset.attributes.overview_version);
 
 
+    user=authenticator.getLoggedInUser();
+
     caramel.render({
         title: 'Store | ' + type,
         user: user,
@@ -144,4 +154,8 @@ require('/modules/store.js').exec(function (ctx) {
 
 
 }, request, response, session);
+
+function getServiceDir(serviceName) {
+    return '../services/' + serviceName;
+}
 %>

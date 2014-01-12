@@ -32,8 +32,8 @@
 
                             {{#if user}}
                             <li class="nav-separator">
-                                <a href="{{url "/dashboard"}}"><i
-                                    class="icon-bookmark store-topnav-bookmark"></i> {{t "My Items"}}</a>
+                                <a href="{{url "/extensions/assets/api/myapps"}}"><i
+                                    class="icon-bookmark store-topnav-bookmark"></i> {{t "My Applications"}}</a>
                             </li>
                             <li>
 
@@ -57,10 +57,9 @@
                                 class="btn btn-primary">{{t "Register"}}</a>
                             </li>
                             {{else}}
-                            <li>
-
-                                <a href="{{url "/extensions/assets/api/myapps"}}">
-                                {{t "My Applications"}}</a>
+                            <li class="nav-separator">
+                                <a href="{{url "/extensions/assets/api/myapps"}}"><i
+                                    class="icon-bookmark store-topnav-bookmark"></i> {{t "My Applications"}}</a>
                             </li>
                             <li>
                                 <a href="#" data-toggle="modal" data-target="#modal-login">{{t "Sign in"}}</a>
