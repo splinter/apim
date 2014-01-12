@@ -14,6 +14,11 @@ var assetLinks=function(user){
                 title:'My Applications',
                 url:'myapps',
                 path:'myapps.jag'
+            },
+            {
+                title:'Login',
+                url:'login',
+                path:'login.jag'
             }
         ]
     }
