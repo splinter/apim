@@ -1,6 +1,6 @@
 <%
 var caramel;
-var authService;
+var AuthService;
 var authenticator;
 var log = new Log();
 include('../modules/jagg/jagg.jag');

@@ -19,6 +19,10 @@ var assetLinks=function(user){
                 title:'Login',
                 url:'login',
                 path:'login.jag'
+            },
+            {
+                url:'logout',
+                path:'logout.jag'
             }
         ]
     }
