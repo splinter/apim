@@ -5,17 +5,28 @@ Filename:add-app.js
  */
 $(function(){
    console.info('Loaded add-app logic');
+    var ADD_API_URL='/store/resources/api/v1/application';
+    var ADD_API_METHOD='POST';
 
    var initFormSubmissionLogic=function(){
 
        $('#btnAddApp').on('click',function(){
 
-            console.info('Add App button clicked');
-
             var data=readAppForm();
 
             //Read the data
-            console.info('User entered data: '+JSON.stringify(data));
+            console.info('Creating app with : '+JSON.stringify(data));
+
+           $.ajax({
+               type:ADD_API_METHOD,
+               url:ADD_API_URL,
+               data:data,
+               success:function(){
+                   console.log('Application was successfully added');
+                   handleSuccessfulAppAddition();
+               }
+           });
+
        });
    };
 
@@ -24,12 +35,19 @@ $(function(){
     */
    var readAppForm=function(){
        var data={};
-       data['application']=$('#appName')?$('#appName').val():'empty';
-       data['tier']= $('#appTier')?$('#appTier').val():'empty';
-       data['callbackUrl']=$('#appCallbackURL')?$('#appCallbackURL').val():'empty';
-       data['description']=$('#appDescription')?$('#appDescription').val():'empty';
+       data['appName']=$('#appName')?$('#appName').val():'empty';
+       data['appTier']= $('#appTier')?$('#appTier').val():'empty';
+       data['appCallbackUrl']=$('#appCallbackURL')?$('#appCallbackURL').val():'empty';
+       data['appDescription']=$('#appDescription')?$('#appDescription').val():'empty';
 
        return data;
+   };
+
+   /*
+   The function is invoked when the application is successfully added
+    */
+   var handleSuccessfulAppAddition=function(){
+       window.location='/store/extensions/assets/api/myapps';
    };
 
    initFormSubmissionLogic();
