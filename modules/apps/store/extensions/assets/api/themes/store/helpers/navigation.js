@@ -7,3 +7,16 @@ var resources= function (page,meta){
         css : ['navigation.css']
     } ;
 };
+
+var currentPage = function(navigation, type, search) {
+    var asset;
+
+    for (asset in navigation.assets) {
+        if (asset == type) {
+            navigation.assets[asset].selected = true;
+            break;
+        }
+    }
+    navigation.search = search;
+    return navigation;
+}
