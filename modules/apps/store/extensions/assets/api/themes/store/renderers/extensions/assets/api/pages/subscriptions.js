@@ -1,12 +1,22 @@
-var render=function(theme,data,meta,require){
-     var log=new Log();
-     log.info('Rendering subscriptions');
+var render = function (theme, data, meta, require) {
 
-     theme('2-column-right',{
-         title: 'Subscriptions',
-         body:[
-             {
-                 partial:'subscriptions'
-             }]
-     });
+    theme('2-column-right', {
+        title: 'Subscriptions',
+        header: [
+            {
+              partial:'header',
+              context:{}
+            },
+            {
+                partial: 'navigation',
+                context: {}
+            }
+        ] ,
+        body:[
+            {
+                partial:'subscriptions',
+                context:{}
+            }
+        ]
+    });
 };
