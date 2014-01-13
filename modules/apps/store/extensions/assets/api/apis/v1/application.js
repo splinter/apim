@@ -27,8 +27,13 @@ var resource=(function(){
         return result;
     };
 
+    var deleteApplication=function(context){
+
+    };
+
     return{
-        post:addApplication
+        post:addApplication,
+        delete:deleteApplication
     }
 
 })();
