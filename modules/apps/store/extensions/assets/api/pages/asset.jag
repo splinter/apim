@@ -160,7 +160,9 @@ require('/modules/store.js').exec(function (ctx) {
         apiData:apiData ,
         metadata:{
             myapps:myapps,
-            tiers:availableTiers
+            tiers:availableTiers,
+            api:apiData,
+            apiAssetData:asset
         }
     });
 

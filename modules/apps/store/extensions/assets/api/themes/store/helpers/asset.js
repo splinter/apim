@@ -28,8 +28,7 @@ var resources = function (page, meta) {
     o.js.push('libs/swagger-ui.js');
 
     o.js.push('logic/asset/tabs/apiconsole.js');
-
+    o.js.push('logic/asset/overview/asset-utilization.js');
     o.code.push('asset/asset-metadata.hbs');
-
     return o;
 };

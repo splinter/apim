@@ -8,8 +8,9 @@
     <div class='well'>
         <h5>Applications With Subscriptions</h5>
         <select id='subscription-selection'>
-            <option>Place Holder [Hardcoded]</option>
-            <option>Another [Hardcoded]</option>
+            {{#each appsWithSubs}}
+            <option>{{name}}</option>
+            {{/each}}
         </select>
     </div>
 

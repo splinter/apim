@@ -30,6 +30,14 @@ var resource = (function () {
         return result;
     };
 
+    /*
+    Returns all of the apis to which the provided app is subscribed to
+     */
+    var getSubscription=function(context){
+
+        //return result;
+    };
+
 
     return{
         post: addSubscription

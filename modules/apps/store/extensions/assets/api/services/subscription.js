@@ -7,14 +7,14 @@
  */
 var serviceModule = (function () {
 
-    var log=new Log('subscriptions');
+    var log = new Log('subscriptions');
 
     function Subscriber() {
-       this.instance=null;
+        this.instance = null;
     }
 
-    Subscriber.prototype.init=function(context,session){
-       this.instance=context.module('subscription');
+    Subscriber.prototype.init = function (context, session) {
+        this.instance = context.module('subscription');
     };
 
     /*
@@ -27,7 +27,14 @@ var serviceModule = (function () {
      @options.user:
      */
     Subscriber.prototype.addSubscription = function (options) {
+        log.info('Subscription information : ' + stringify(options));
+        var apiData = {};
+        apiData['name'] = options.apiName;
+        apiData['version'] = options.apiVersion;
+        apiData['provider'] = options.apiProvider;
+        var result = this.instance.addAPISubscription(apiData, options.apiTier, options.appName, options.user);
 
+        return result;
     };
 
     Subscriber.prototype.removeSubscription = function (options) {
@@ -35,15 +42,21 @@ var serviceModule = (function () {
     };
 
     /*
-    The function returns all applications that have subscriptions
-    options.user: The name of the user whose apps must be returned
+     The function returns all applications that have subscriptions
+     options.user: The name of the user whose apps must be returned
      */
-    Subscriber.prototype.getAppsWithSubs=function(options){
-         var appList=this.instance.getAllSubscriptions(options.user);
-         return appList;
+    Subscriber.prototype.getAppsWithSubs = function (options) {
+        var result = this.instance.getAllSubscriptions(options.user);
+        return (result)?result.applications:[];
+    };
+
+
+    Subscriber.prototype.getSubsForApp=function(options){
+        var result= this.instance.getAPISubscriptionsForApplication(options.user,options.appName);
+        return result;
     };
 
     return{
-        SubscriptionService:Subscriber
+        SubscriptionService: Subscriber
     }
 })();
