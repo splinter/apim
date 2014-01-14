@@ -29,5 +29,7 @@ var resources = function (page, meta) {
 
     o.js.push('logic/asset/tabs/apiconsole.js');
 
+    o.code.push('asset/asset-metadata.hbs');
+
     return o;
 };

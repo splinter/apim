@@ -1,6 +1,8 @@
 <%
 var caramel;
 var AuthService;
+var AppService;
+var appInfoApi;
 var authenticator;
 var log = new Log();
 include('../modules/jagg/jagg.jag');
@@ -11,6 +13,11 @@ docsManager.init(jagg, session);
 var APIInformationService=require('../services/api-information.js').serviceModule;
 var apiInfoManager=new APIInformationService.APIInformationService();
 apiInfoManager.init(jagg,session);
+
+AppService=require(getServiceDir('app.js')).serviceModule;
+appInfoApi=new AppService.AppService();
+
+appInfoApi.init(jagg,session);
 
 AuthService=require(getServiceDir('authentication.js')).serviceModule;
 
@@ -113,7 +120,8 @@ require('/modules/store.js').exec(function (ctx) {
     var apiData=apiInfoManager.getAPIDescription(asset.attributes.overview_provider,
            asset.attributes.overview_name,
            asset.attributes.overview_version);
-
+    var myapps=appInfoApi.getApplications('admin');
+    var availableTiers=apiInfoManager.getTiers();
 
     user=authenticator.getLoggedInUser();
 
@@ -149,7 +157,11 @@ require('/modules/store.js').exec(function (ctx) {
         recentAssets: store.recentAssets(type),
         assetsByProvider: assetsByProvider,
         documentation: docs,
-        apiData:apiData
+        apiData:apiData ,
+        metadata:{
+            myapps:myapps,
+            tiers:availableTiers
+        }
     });
 
 

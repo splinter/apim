@@ -5,7 +5,7 @@ var render = function(theme, data, meta, require) {
 	//print(caramel.build(data));
 	theme('2-column-right', {
 		title : data.title,
-		
+		metadata:data.metadata,
 		header: [
 					{
 						partial: 'header',
@@ -34,7 +34,9 @@ var render = function(theme, data, meta, require) {
                         data:data.documentation
                     }
                 },
-                apiData:data.apiData
+                apiData:data.apiData,
+                myapps:data.metadata.myapps,
+                tiers:data.metadata.tiers
             })
         }],
 		right : [

@@ -22,7 +22,10 @@
 					<span class="asset-rating">
                             <div style="width:{{../rating.ratingPx}}px"></div>
                     </span>
-                    {{>asset-utilization ../../.}}
+                    <!--The subscription option should only be visible if the user is logged in-->
+
+                        {{>asset-utilization ../../.}}
+
                 </div>
 
             </div>
@@ -47,6 +50,7 @@
             <li>
                 <a href="#tab-throttleinfo" data-toggle="tab" data-type="comments">{{t "Throttling Info"}}</a>
             </li>
+
         </ul>
 
         <div class="tab-content">
