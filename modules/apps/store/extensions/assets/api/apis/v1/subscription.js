@@ -23,7 +23,12 @@ var resource = (function () {
         subscription['appName'] = parameters.appName;
         subscription['user'] = 'admin'; //TODO: Get the user from the session or as a request parameter?
 
+        log.info('Trying to add a subscription');
+
         var result = subsApi.addSubscription(subscription);
+
+
+        log.info(result);
 
         return result;
     };

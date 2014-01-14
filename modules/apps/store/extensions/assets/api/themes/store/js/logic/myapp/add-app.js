@@ -5,7 +5,7 @@ Filename:add-app.js
  */
 $(function(){
    console.info('Loaded add-app logic');
-    var ADD_API_URL='/store/resources/api/v1/application';
+    var ADD_API_URL='/store/resources/api/v1/application/new';
     var ADD_API_METHOD='POST';
 
    var initFormSubmissionLogic=function(){

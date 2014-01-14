@@ -3,7 +3,7 @@ $(function(){
     console.info('The subscription widget has been loaded');
     var APP_NAME_FIELD='#subsAppName';
     var TIER_FIELD='#subsAppTier';
-    var API_URL='/store/resources/api/v1/subscription';
+    var API_URL='/store/resources/api/v1/subscription/app';
 
     $('#btnSubscribe').on('click',function(){
          console.log('Hello');
