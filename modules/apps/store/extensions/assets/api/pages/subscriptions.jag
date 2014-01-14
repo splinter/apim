@@ -18,9 +18,6 @@ caramel = require('caramel');
 var apps=subsApi.getAppsWithSubs({user:'admin'});
 var apis=subsApi.getSubsForApp({appName:'test2',user:'admin'});
 
-log.info(apps);
-log.info(apis);
-
 caramel.render({
     appsWithSubs:apps,
     metadata:{

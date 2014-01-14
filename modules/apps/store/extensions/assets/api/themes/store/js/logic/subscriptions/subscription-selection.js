@@ -6,6 +6,7 @@ $(function () {
     var CONTROL_PANEL_TEMPLATE = '#subscription-control-panel-template';
     var SUBSCRIPTIONS_LIST_TEMPLATE = '#subscriptions-list-template';
     var SUBSCRIPTION_KEYS_TEMPLATE = '#subscriptions-keys-template';
+    var API_SUBS_URL='/store/resources/api/v1/subscription';
 
     /*
     The containers in which the UI components will be rendered
@@ -19,7 +20,9 @@ $(function () {
 
     $('#subscription-selection').on('change', function () {
         console.info('The user has changed the selection');
+
         loadUI();
+        populateApisWithSub();
     });
 
     /*
@@ -31,8 +34,8 @@ $(function () {
           var keysTemplate=Handlebars.compile($(SUBSCRIPTION_KEYS_TEMPLATE).html());
 
           $(CONTROL_CONTAINER).html(controlPanelTemplate());
-          $(SUBS_LIST_CONTAINER).html(subsListTemplate());
-          $(SUBS_KEYS_CONTAINER).html(keysTemplate());
+          //$(SUBS_LIST_CONTAINER).html(subsListTemplate());
+          //$(SUBS_KEYS_CONTAINER).html(keysTemplate());
     };
 
     /*
@@ -40,5 +43,25 @@ $(function () {
      */
     var destroyUI = function () {
 
+    };
+
+    /*
+    The function populates the list of APIs to which the app subscribes
+     */
+    var populateApisWithSub=function(appName){
+        $.ajax({
+            url:API_SUBS_URL,
+            type:'GET',
+            success:function(data){
+                console.log('Successfully obtained the list of APIs');
+                console.log(data);
+
+                //Clear the existing data
+                $(SUBS_LIST_CONTAINER).html('');
+
+                //Display the data
+                $(SUBS_LIST_CONTAINER).html(JSON.stringify(data));
+            }
+        })
     };
 });

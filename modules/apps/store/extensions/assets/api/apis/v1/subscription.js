@@ -34,13 +34,16 @@ var resource = (function () {
     Returns all of the apis to which the provided app is subscribed to
      */
     var getSubscription=function(context){
-
-        //return result;
+         //Get the api name
+        var apis=subsApi.getSubsForApp({appName:'test2',user:'admin'});
+        log.info(apis);
+        return apis;
     };
 
 
     return{
-        post: addSubscription
+        post: addSubscription,
+        get:getSubscription
     }
 
 })();
