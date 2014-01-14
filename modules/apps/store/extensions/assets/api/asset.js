@@ -23,9 +23,14 @@ var assetLinks = function (user) {
                 path: 'logout.jag'
             },
             {
-                title: 'Subscriptions',
-                url: 'subscriptions',
-                path: 'subscriptions.jag'
+                 title:'Custom',
+                 url:'custom',
+                 path:'custom.jag'
+            } ,
+            {
+                title:'Subscriptions',
+                url:'subscriptions',
+                path:'subscriptions.jag'
             }
         ]
     }

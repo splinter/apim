@@ -1,3 +1,4 @@
+
 var render = function (theme, data, meta, require) {
 
     theme('2-column-right', {
@@ -20,4 +21,5 @@ var render = function (theme, data, meta, require) {
             }
         ]
     });
+
 };

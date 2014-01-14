@@ -2,11 +2,13 @@
     <h4>Subscriptions</h4>
 
     <small>Keys are generated per Application which allows to use a single key for multiple APIs and subscribe multiple
-    times to a single API ,with different SLA levels.</small>
+        times to a single API ,with different SLA levels.
+    </small>
     <hr/>
 
     <div class='well'>
         <h5>Applications With Subscriptions</h5>
+
         <select id='subscription-selection'>
             {{#each appsWithSubs}}
             <option>{{name}}</option>
@@ -37,5 +39,6 @@
     <script type='text/template' id='subscriptions-list-template'>
 
     </script>
+
 
 </div>
