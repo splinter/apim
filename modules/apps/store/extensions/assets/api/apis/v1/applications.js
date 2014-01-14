@@ -2,6 +2,9 @@ var resource=(function(){
 
     var log=new Log('application-logic');
 
+    /*
+    The method returns all of the applications for the currently logged in user
+     */
     var getApplications=function(context){
 
         var AppService = require('/extensions/assets/api/services/app.js').serviceModule;
