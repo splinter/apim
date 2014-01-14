@@ -20,30 +20,38 @@ var resource = (function () {
         subscription['apiVersion'] = parameters.apiVersion;
         subscription['apiTier'] = parameters.apiTier;
         subscription['apiProvider'] = parameters.apiProvider;
-        subscription['appName']=parameters.appName;
-        subscription['user']='admin'; //TODO: Get the user from the session or as a request parameter?
+        subscription['appName'] = parameters.appName;
+        subscription['user'] = 'admin'; //TODO: Get the user from the session or as a request parameter?
 
-        var result=subsApi.addSubscription(subscription);
-
-        log.info(result);
+        var result = subsApi.addSubscription(subscription);
 
         return result;
     };
 
     /*
-    Returns all of the apis to which the provided app is subscribed to
+     Returns all of the apis to which the provided app is subscribed to
      */
-    var getSubscription=function(context){
-         //Get the api name
-        var apis=subsApi.getSubsForApp({appName:'test2',user:'admin'});
-        log.info(apis);
+    var getSubscription = function (context) {
+
+        var uriMatcher = new URIMatcher(request.getRequestURI());
+        var URI = '/{context}/resources/{asset}/{version}/{resource}/{appName}';
+        var isMatch = uriMatcher.match(URI);
+        var apis={};
+
+        if (isMatch) {
+
+            var appName = uriMatcher.elements().appName;
+
+            //Get the api name
+            apis = subsApi.getSubsForApp({appName:appName, user: 'admin'});
+        }
         return apis;
     };
 
 
     return{
         post: addSubscription,
-        get:getSubscription
+        get: getSubscription
     }
 
 })();
