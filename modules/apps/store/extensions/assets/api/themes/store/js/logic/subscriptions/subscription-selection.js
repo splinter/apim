@@ -31,7 +31,7 @@ $(function () {
      */
     var loadUI = function () {
         var controlPanelTemplate = Handlebars.compile($(CONTROL_PANEL_TEMPLATE).html());
-        var subsListTemplate = Handlebars.compile($(SUBSCRIPTIONS_LIST_TEMPLATE).html());
+        var subsListTemplate = Handlebars.compile(apiListTemplate);//$(SUBSCRIPTIONS_LIST_TEMPLATE).html());
         var keysTemplate = Handlebars.compile($(SUBSCRIPTION_KEYS_TEMPLATE).html());
 
         $(SUBS_LIST_CONTAINER).html('');
@@ -59,13 +59,19 @@ $(function () {
             success: function (data) {
                 console.log('Successfully obtained the list of APIs');
                 console.log(data);
-
+                var apis=JSON.parse(data);
                 //Clear the existing data
                 $(SUBS_LIST_CONTAINER).html('');
-
+                var subsListTemplate = Handlebars.compile(apiListTemplate);
+                console.log(JSON.stringify(apis[0].apiName));
+                var result=subsListTemplate(apis);
                 //Display the data
-                $(SUBS_LIST_CONTAINER).html(JSON.stringify(data));
+                $(SUBS_LIST_CONTAINER).html(subsListTemplate(apis));
             }
         })
     };
+
+    var apiListTemplate='<div class="row-fluid">{{#each .}}'+
+                        '<div class="span3 asset">{{apiName}}</div>'+
+                        '{{/each}}</div>';
 });
