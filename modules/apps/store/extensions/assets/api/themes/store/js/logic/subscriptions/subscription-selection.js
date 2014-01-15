@@ -59,19 +59,28 @@ $(function () {
             success: function (data) {
                 console.log('Successfully obtained the list of APIs');
                 console.log(data);
-                var apis=JSON.parse(data);
+                var apis = JSON.parse(data);
                 //Clear the existing data
                 $(SUBS_LIST_CONTAINER).html('');
                 var subsListTemplate = Handlebars.compile(apiListTemplate);
                 console.log(JSON.stringify(apis[0].apiName));
-                var result=subsListTemplate(apis);
+                var result = subsListTemplate(apis);
                 //Display the data
                 $(SUBS_LIST_CONTAINER).html(subsListTemplate(apis));
             }
         })
     };
 
-    var apiListTemplate='<hr/><h4>Subscribed APIs</h4><div class="row-fluid">{{#each .}}'+
-                        '<div class="span3 asset">{{apiName}}</div>'+
-                        '{{/each}}</div>';
+    var apiListTemplate = '<hr/><h4>Subscribed APIs</h4><div class="row-fluid">{{#each .}}' +
+        '<div class="span3 asset"> ' +
+        '<div class="asset-icon">' +
+        '<img src="/store/extensions/assets/api/themes/store/img/default_thumb.jpg"/>' +
+        '</div>' +
+        '<div class="asset-details">' +
+        '<div class="asset-name">' +
+        '{{apiName}}' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '{{/each}}</div>';
 });
