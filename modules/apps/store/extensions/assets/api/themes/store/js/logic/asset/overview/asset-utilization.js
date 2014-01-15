@@ -50,6 +50,7 @@ $(function(){
            data:subscription,
            success:function(){
                console.info('Successfully subscribed to API: '+subscription.apiName);
+               alert('Succsessfully subscribed to the '+subscription.apiName+' API.');
            }
         });
     };
