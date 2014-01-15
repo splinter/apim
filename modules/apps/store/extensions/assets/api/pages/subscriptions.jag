@@ -9,32 +9,39 @@ var log = new Log('subscriptions');
 
 include('../modules/jagg/jagg.jag');
 
-SubscriptionService=require(getServiceDir('subscription.js')).serviceModule;
-subsApi=new SubscriptionService.SubscriptionService();
+require('/modules/store.js').exec(function (ctx) {
+    var store = ctx.store;
+    var recentAssets = store.recentAssets('api');
 
-AuthService=require(getServiceDir('authentication.js')).serviceModule;
+    SubscriptionService = require(getServiceDir('subscription.js')).serviceModule;
+    subsApi = new SubscriptionService.SubscriptionService();
 
-authenticator=new AuthService.Authenticator();
+    AuthService = require(getServiceDir('authentication.js')).serviceModule;
 
-authenticator.init(jagg,session);
+    authenticator = new AuthService.Authenticator();
 
-subsApi.init(jagg,session);
+    authenticator.init(jagg, session);
 
-caramel = require('caramel');
+    subsApi.init(jagg, session);
+
+    caramel = require('caramel');
 
 
-var apps=subsApi.getAppsWithSubs({user:'admin'});
-var apis=subsApi.getSubsForApp({appName:'test2',user:'admin'});
-var userData=authenticator.getLoggedInUser();
+    var apps = subsApi.getAppsWithSubs({user: 'admin'});
+    var apis = subsApi.getSubsForApp({appName: 'test2', user: 'admin'});
+    var userData = authenticator.getLoggedInUser();
 
-caramel.render({
-    header:{
-        user:userData
-    },
-    appsWithSubs:apps,
-    metadata:{
-        appsWithSubs:apps
-    }
+    caramel.render({
+        header: {
+            user: userData
+        },
+        appsWithSubs: apps,
+        metadata: {
+            appsWithSubs: apps
+        },
+        recentAssets:recentAssets
+    }, request, response, session);
+
 }, request, response, session);
 
 

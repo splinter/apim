@@ -19,6 +19,12 @@ var render = function (theme, data, meta, require) {
                 partial:'subscriptions',
                 context:{appsWithSubs:data.appsWithSubs}
             }
+        ],
+        right:[
+            {
+                partial:'recent-assets',
+                context:require('helpers/asset.js').formatRatings(data.recentAssets)
+            }
         ]
     });
 
