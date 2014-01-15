@@ -71,7 +71,7 @@ $(function () {
         })
     };
 
-    var apiListTemplate='<div class="row-fluid">{{#each .}}'+
+    var apiListTemplate='<hr/><h4>Subscribed APIs</h4><div class="row-fluid">{{#each .}}'+
                         '<div class="span3 asset">{{apiName}}</div>'+
                         '{{/each}}</div>';
 });
