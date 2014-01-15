@@ -78,7 +78,7 @@ $(function () {
         '</div>' +
         '<div class="asset-details">' +
         '<div class="asset-name">' +
-        '{{apiName}}' +
+        '{{apiName}} {{apiVersion}}' +
         '</div>' +
         '</div>' +
         '</div>' +
