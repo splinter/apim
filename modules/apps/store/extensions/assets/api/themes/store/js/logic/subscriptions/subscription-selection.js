@@ -15,6 +15,39 @@ $(function () {
     var SUBS_LIST_CONTAINER = '#subscription-list';
     var SUBS_KEYS_CONTAINER = '#subscription-keys';
 
+    var EV_APP_SELECT='eventAppSelection';
+    var EV_SHOW_KEYS='eventShowKeys';
+    var EV_REGENERATE_TOKEN='eventRegenerateToken';
+    var EV_UPDATE_DOMAIN='eventUpdateDomain';
+    var EV_GENERATE_TOKEN='eventGenerateToken';
+
+    var SUBS_LIST_VIEW='subsListView';
+    var SUBS_KEY_VIEW='subsControlView';
+
+    events.register(EV_APP_SELECT);
+    events.register(EV_SHOW_KEYS);
+    events.register(EV_REGENERATE_TOKEN);
+    events.register(EV_GENERATE_TOKEN);
+    events.register(EV_UPDATE_DOMAIN);
+
+    var viewListView=function(data){
+        console.info('User has selected: '+data.appName);
+    };
+
+    var viewProductionKeyView=function(data){
+        console.info('Rendering control');
+        console.info('Rendering the key view');
+        console.info('Listening for button token refresh click');
+        console.info('Listening for button token generate click');
+    };
+
+    var viewProductionModuleView=function(data){
+
+    };
+
+    events.subscribe(EV_APP_SELECT,SUBS_LIST_VIEW,viewListView);
+    events.subscribe(EV_APP_SELECT,SUBS_KEY_VIEW,viewProducctionKeyView);
+    events.subscribe(EV)
 
     console.info('Listening for the selected subscription to be changed');
 
@@ -24,6 +57,8 @@ $(function () {
         loadUI();
         var selectedAppName = $('#subscription-selection').val();
         populateApisWithSub(selectedAppName);
+
+        events.publish(EV_APP_SELECT,{appName:selectedAppName});
     });
 
     /*
@@ -43,7 +78,7 @@ $(function () {
             subscriptionlist:'/extensions/assets/api/themes/store/partials/subscription-keys.hbs'
         },function(){
             var template=Handlebars.partials['subscriptionlist']({});
-            console.info(template);
+            //console.info(template);
         });
         //$(SUBS_LIST_CONTAINER).html(subsListTemplate());
         //$(SUBS_KEYS_CONTAINER).html(keysTemplate());
