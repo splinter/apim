@@ -38,6 +38,13 @@ $(function () {
         $(CONTROL_CONTAINER).html('');
 
         $(CONTROL_CONTAINER).html(controlPanelTemplate());
+
+        caramel.partials({
+            subscriptionlist:'/extensions/assets/api/themes/store/partials/subscription-keys.hbs'
+        },function(){
+            var template=Handlebars.partials['subscriptionlist']({});
+            console.info(template);
+        });
         //$(SUBS_LIST_CONTAINER).html(subsListTemplate());
         //$(SUBS_KEYS_CONTAINER).html(keysTemplate());
     };
