@@ -95,7 +95,7 @@ $(function () {
     Views.extend('view', {
         id: 'defaultProductionKeyView',
         container: PROD_KEYS_CONTAINER,
-        partial: 'subscriptions/sub-key-generate',
+        partial: 'subscriptions/sub-keys-generate',
         beforeRender: function (data) {
             data['environment'] = Views.translate('Production');
         },
