@@ -3,9 +3,6 @@ $(function () {
     /*
      The location of the templates used in the rendering
      */
-    var CONTROL_PANEL_TEMPLATE = '#subscription-control-panel-template';
-    var SUBSCRIPTIONS_LIST_TEMPLATE = '#subscriptions-list-template';
-    var SUBSCRIPTION_KEYS_TEMPLATE = '#subscriptions-keys-template';
     var API_SUBS_URL = '/store/resources/api/v1/subscription/';
 
     /*
@@ -13,116 +10,225 @@ $(function () {
      */
     var CONTROL_CONTAINER = '#subscription-control-panel';
     var SUBS_LIST_CONTAINER = '#subscription-list';
-    var SUBS_KEYS_CONTAINER = '#subscription-keys';
 
-    var EV_APP_SELECT='eventAppSelection';
-    var EV_SHOW_KEYS='eventShowKeys';
-    var EV_REGENERATE_TOKEN='eventRegenerateToken';
-    var EV_UPDATE_DOMAIN='eventUpdateDomain';
-    var EV_GENERATE_TOKEN='eventGenerateToken';
+    var PROD_KEYS_CONTAINER = '#prod-token-view';
+    var PROD_DOMAIN_CONTAINER = '#prod-domain-view';
+    var SAND_KEYS_CONTAINER = '#sand-token-view';
+    var SAND_DOMAIN_CONTAINER = '#sand-domain-view';
 
-    var SUBS_LIST_VIEW='subsListView';
-    var SUBS_KEY_VIEW='subsControlView';
+
+    var EV_APP_SELECT = 'eventAppSelection';
+    var EV_SHOW_KEYS = 'eventShowKeys';
+    var EV_HIDE_KEYS = 'eventHideKeys';
+    var EV_REGENERATE_TOKEN = 'eventRegenerateToken';
+    var EV_UPDATE_DOMAIN = 'eventUpdateDomain';
+    var EV_GENERATE_PROD_TOKEN = 'eventGenerateProductionToken';
+    var EV_GENERATE_SAND_TOKEN = 'eventGenerateSandboxToken';
+
+    /*
+     The function returns the subscriptions of the given application
+     */
+    var findSubscriptionDetails = function (appName) {
+        var apps = metadata.appsWithSubs;
+        var app;
+        for (var appIndex in apps) {
+            app = apps[appIndex];
+
+            if (app.name == appName) {
+                return app.subscriptions;
+            }
+        }
+
+        return [];
+    };
+
+    /*
+
+     */
+    var findAppDetails=function(appName){
+        var apps = metadata.appsWithSubs;
+        var app;
+        for (var appIndex in apps) {
+            app = apps[appIndex];
+
+            if (app.name == appName) {
+                return app;
+            }
+        }
+
+        return null;
+    };
+
+    var attachGenerateProdToken = function () {
+        ///We need to prevent the afterRender function from been inherited by child views
+        //otherwise this method will be invoked by child views
+        //console.info('Attaching generate button');
+        $('#btn-generate-Production-token').on('click', function () {
+            var appName = $('#subscription-selection').val();
+            events.publish(EV_GENERATE_PROD_TOKEN, {appName: appName});
+        });
+    };
+
+    var attachGenerateSandToken = function () {
+
+        console.info('Attaching generate button for sandbox');
+        $('#btn-generate-Sandbox-token').on('click', function () {
+            var appName = $('#subscription-selection').val();
+            events.publish(EV_GENERATE_SAND_TOKEN, {appName: appName});
+        });
+    };
+
 
     events.register(EV_APP_SELECT);
     events.register(EV_SHOW_KEYS);
     events.register(EV_REGENERATE_TOKEN);
-    events.register(EV_GENERATE_TOKEN);
+    events.register(EV_GENERATE_PROD_TOKEN);
     events.register(EV_UPDATE_DOMAIN);
+    events.register(EV_GENERATE_SAND_TOKEN);
 
-    var viewListView=function(data){
-        console.info('User has selected: '+data.appName);
-    };
+    /*
+     Keys View
+     The default view which prompts the user to generate a key
+     */
 
-    var viewProductionKeyView=function(data){
-        console.info('Rendering control');
-        console.info('Rendering the key view');
-        console.info('Listening for button token refresh click');
-        console.info('Listening for button token generate click');
-    };
+    //Production view
+    Views.extend('view', {
+        id: 'defaultProductionKeyView',
+        container: PROD_KEYS_CONTAINER,
+        partial: 'subscriptions/sub-key-generate',
+        beforeRender: function (data) {
+            data['environment'] = Views.translate('Production');
+        },
+        afterRender: attachGenerateProdToken,
+        subscriptions: [EV_APP_SELECT]
+    });
 
-    var viewProductionModuleView=function(data){
+    Views.extend('defaultProductionKeyView', {
+        id: 'visibleProductionKeyView',
+        partial: 'subscriptions/sub-keys-visible',
+        subscriptions: [EV_SHOW_KEYS, EV_GENERATE_PROD_TOKEN],
+        resolveRender: function () {
+            //If the user has ticked show keys render the view
+            return true;
+        },
+        afterRender: function () {
+        }
+    });
 
-    };
+    Views.extend('defaultProductionKeyView', {
+        id: 'hiddenProductionKeyView',
+        disabled: true,
+        subscriptions: [EV_HIDE_KEYS],
+        resolveRender: function () {
+            //If the user has clicked the show keys then do not render
+            return true;
+        },
+        afterRender: function () {
+        }
+    });
 
-    events.subscribe(EV_APP_SELECT,SUBS_LIST_VIEW,viewListView);
-    events.subscribe(EV_APP_SELECT,SUBS_KEY_VIEW,viewProducctionKeyView);
-    events.subscribe(EV)
+    //Sandbox view
+    Views.extend('defaultProductionKeyView', {
+        id: 'defaultSandboxKeyView',
+        container: SAND_KEYS_CONTAINER,
+        afterRender: attachGenerateSandToken,
+        beforeRender: function (data) {
+            data['environment'] = Views.translate('Sandbox');
+        }
+    });
 
-    console.info('Listening for the selected subscription to be changed');
+    Views.extend('defaultSandboxKeyView', {
+        id: 'visibleSandboxKeyView',
+        partial: 'subscriptions/sub-keys-visible',
+        afterRender: function () {
+        },
+        beforeRender: function (data) {
 
-    $('#subscription-selection').on('change', function () {
-        console.info('The user has changed the selection');
-
-        loadUI();
-        var selectedAppName = $('#subscription-selection').val();
-        populateApisWithSub(selectedAppName);
-
-        events.publish(EV_APP_SELECT,{appName:selectedAppName});
+        },
+        subscriptions: [EV_SHOW_KEYS, EV_GENERATE_SAND_TOKEN]
     });
 
     /*
-     The function loads the UI from the templates embedded in the page
+     Domain View
      */
-    var loadUI = function () {
-        var controlPanelTemplate = Handlebars.compile($(CONTROL_PANEL_TEMPLATE).html());
-        var subsListTemplate = Handlebars.compile(apiListTemplate);//$(SUBSCRIPTIONS_LIST_TEMPLATE).html());
-        var keysTemplate = Handlebars.compile($(SUBSCRIPTION_KEYS_TEMPLATE).html());
 
-        $(SUBS_LIST_CONTAINER).html('');
-        $(CONTROL_CONTAINER).html('');
+    //Production view
+    Views.extend('view', {
+        id: 'defaultProductionDomainView',
+        container: PROD_DOMAIN_CONTAINER,
+        partial: 'subscriptions/sub-domain-token',
+        subscriptions: [EV_APP_SELECT],
+        afterRender: function () {
+        }
+    });
 
-        $(CONTROL_CONTAINER).html(controlPanelTemplate());
+    Views.extend('defaultProductionDomainView', {
+        id: 'updateProductionDomainView',
+        partial: 'subscriptions/sub-domain-update',
+        subscriptions: [EV_GENERATE_PROD_TOKEN],
+        beforeRender: function (data) {
 
-        caramel.partials({
-            subscriptionlist:'/extensions/assets/api/themes/store/partials/subscription-keys.hbs'
-        },function(){
-            var template=Handlebars.partials['subscriptionlist']({});
-            //console.info(template);
-        });
-        //$(SUBS_LIST_CONTAINER).html(subsListTemplate());
-        //$(SUBS_KEYS_CONTAINER).html(keysTemplate());
-    };
+        },
+        afterRender: function () {
+        }
+
+    });
+
+    //Sandbox view
+    Views.extend('defaultProductionDomainView', {
+        id: 'defaultSandboxDomainView',
+        container: SAND_DOMAIN_CONTAINER,
+        afterRender: function () {
+        }
+    });
+
+    Views.extend('defaultSandboxDomainView',{
+        id:'updateSandboxDomainVIew',
+        partial:'subscriptions/sub-domain-update',
+        afterRender:function(){},
+        subscriptions:[EV_GENERATE_SAND_TOKEN]
+    });
 
     /*
-     The function deconstructs the UI when the user switches to working on a new subscription
+     API Subscription listing view
      */
-    var destroyUI = function () {
+    Views.extend('view', {
+        id: 'defaultAPISubscriptionsView',
+        container: SUBS_LIST_CONTAINER,
+        partial: 'subscriptions/sub-listing',
+        beforeRender: function (data) {
+            var appName = data.appName;
+            data['subscriptions'] = findSubscriptionDetails(appName);
+        },
+        subscriptions: [EV_APP_SELECT],
+        afterRender: function () {
+        }
+    });
 
-    };
 
     /*
-     The function populates the list of APIs to which the app subscribes
+     Control panel containing the Show Keys checkbox
+     -Rendered when the user selects an application
      */
-    var populateApisWithSub = function (appName) {
-        $.ajax({
-            url: API_SUBS_URL + appName,
-            type: 'GET',
-            success: function (data) {
-                console.log('Successfully obtained the list of APIs');
-                console.log(data);
-                var apis = JSON.parse(data);
-                //Clear the existing data
-                $(SUBS_LIST_CONTAINER).html('');
-                var subsListTemplate = Handlebars.compile(apiListTemplate);
-                console.log(JSON.stringify(apis[0].apiName));
-                var result = subsListTemplate(apis);
-                //Display the data
-                $(SUBS_LIST_CONTAINER).html(subsListTemplate(apis));
-            }
-        })
-    };
 
-    var apiListTemplate = '<hr/><h4>Subscribed APIs</h4><div class="row-fluid">{{#each .}}' +
-        '<div class="span3 asset"> ' +
-        '<div class="asset-icon">' +
-        '<img src="/store/extensions/assets/api/themes/store/img/default_thumb.jpg"/>' +
-        '</div>' +
-        '<div class="asset-details">' +
-        '<div class="asset-name">' +
-        '{{apiName}} {{apiVersion}}' +
-        '</div>' +
-        '</div>' +
-        '</div>' +
-        '{{/each}}</div>';
+    Views.extend('view', {
+        id: 'keyControlPanelView',
+        container: CONTROL_CONTAINER,
+        partial: 'subscriptions/sub-control-panel',
+        subscriptions: [EV_APP_SELECT],
+        afterRender: function () {
+        }
+    });
+
+
+    var defaultAppName = $('#subscription-selection').val();
+    events.publish(EV_APP_SELECT, {appName: defaultAppName});
+
+    //Connect the events
+    $('#subscription-selection').on('change', function () {
+        var appName = $('#subscription-selection').val();
+        events.publish(EV_APP_SELECT, {appName: appName});
+    });
+
+
 });

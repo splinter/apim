@@ -36,6 +36,7 @@ var events;
 
     EventBus.prototype.publish = function (eventName, data) {
         var cb;
+        var dataCopy;
         //Check if the event is tracked
         if (this.eventMap.hasOwnProperty(eventName)) {
 
@@ -44,7 +45,12 @@ var events;
 
                 //Invoke all subscribers
                 cb = this.eventMap[eventName][subscriber];
-                cb(data);
+
+                //Perform a shallow copy so that each event handler recieves its own copy of the data
+                //there is no sharing of data between handlers
+                dataCopy=deepCopy(data);
+
+                cb.invoke(dataCopy);
             }
 
         }
@@ -81,6 +87,17 @@ var events;
             removeSubscription(subscriber, eventName, eventMap);
         }
     }
+
+    var deepCopy=function(data){
+
+        var copy={};
+
+        for(var prop in data){
+            copy[prop]=data[prop];
+        }
+
+        return copy;
+    };
 
     events = new EventBus();
 
