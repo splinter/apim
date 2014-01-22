@@ -5,6 +5,8 @@
  */
 var serviceModule = (function () {
 
+    var log=new Log('keyservice');
+
     function KeyService() {
         this.instance = null;
     }
@@ -37,17 +39,18 @@ var serviceModule = (function () {
     };
 
     /*
-    options.appName:
     options.username:
+    options.appName:
     options.keyType
     options.callbackUrl
     options.accessAllowDomains
     options.validityTime
      */
     KeyService.prototype.generateApplicationKey = function (options) {
-        var result=this.instance.getApplicationKey(options.appName,options.username,options.keyType,options.callbackUrl,
+        var result=this.instance.getApplicationKey(options.username,options.appName,options.keyType,options.callbackUrl,
         options.accessAllowDomains,options.validityTime);
-        return result.key;
+        log.info(result);
+        return result;
     };
 
     /*
@@ -76,5 +79,8 @@ var serviceModule = (function () {
        options.accessAllowDomains);
     };
 
+    return{
+        KeyService:KeyService
+    }
 
 })();
