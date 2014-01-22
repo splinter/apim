@@ -14,6 +14,15 @@ var resource=(function(){
 
         keyApi.init(jagg,session);
 
+        var parameters=request.getContent();
+
+        var accessAllowDomains=parameters.accessAllowDomains.split(',')||[];
+
+        var result=kepApi.updateAccessAllowDomains({
+            accessToken:parameters.accessToken,
+            accessAllowDomains:accessAllowDomains
+        });
+
     };
 
     return{
