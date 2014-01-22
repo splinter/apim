@@ -5,7 +5,7 @@
  */
 var serviceModule = (function () {
 
-    var log=new Log('keyservice');
+    var log = new Log('keyservice');
 
     function KeyService() {
         this.instance = null;
@@ -39,48 +39,55 @@ var serviceModule = (function () {
     };
 
     /*
-    options.username:
-    options.appName:
-    options.keyType
-    options.callbackUrl
-    options.accessAllowDomains
-    options.validityTime
+     options.username:
+     options.appName:
+     options.keyType
+     options.callbackUrl
+     options.accessAllowDomains
+     options.validityTime
      */
     KeyService.prototype.generateApplicationKey = function (options) {
-        var result=this.instance.getApplicationKey(options.username,options.appName,options.keyType,options.callbackUrl,
-        options.accessAllowDomains,options.validityTime);
-        log.info(result);
+        var result = this.instance.getApplicationKey(options.username, options.appName, options.keyType, options.callbackUrl,
+            options.accessAllowDomains, options.validityTime);
         return result;
     };
 
     /*
-    options.username
-    options.appName
-    options.keyType
-    options.oldAccessToken
-    options.accessAllowDomains
-    options.clientId
-    options.clientSecret
-    options.validityTime
+     options.username
+     options.appName
+     options.keyType
+     options.oldAccessToken
+     options.accessAllowDomains
+     options.clientId = consumerKey
+     options.clientSecret = consumerSecret
+     options.validityTime
      */
     KeyService.prototype.refreshToken = function (options) {
-       var key=this.instance.refreshToken(options.username,options.appName,options.keyType,options.oldAccessToken,
-       options.callbackUrl,options.accessAllowDomains,options.clientId,options.clientSecret,options.validityTime);
 
-       return key;
+        log.info(options);
+        var key = this.instance.refreshToken(options.username,
+            options.appName,
+            options.keyType,
+            options.oldAccessToken,
+            options.accessAllowDomains,
+            options.clientId,
+            options.clientSecret,
+            options.validityTime);
+
+        return key;
     };
 
     /*
-    options.oldAccessToken
-    options.accessAllowDomains
+     options.oldAccessToken
+     options.accessAllowDomains
      */
     KeyService.prototype.updateAccessAllowDomains = function (options) {
-       var accessAllowDomains=this.instance.updateAccessAllowDomains(options.oldAccessToken,
-       options.accessAllowDomains);
+        var accessAllowDomains = this.instance.updateAccessAllowDomains(options.oldAccessToken,
+            options.accessAllowDomains);
     };
 
     return{
-        KeyService:KeyService
+        KeyService: KeyService
     }
 
 })();

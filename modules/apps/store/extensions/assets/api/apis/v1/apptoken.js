@@ -10,14 +10,14 @@ var resource = (function () {
     var generateToken = function (context) {
 
         var parameters = context.request.getAllParameters();
-        var accessAllowDomains=parameters.accessAllowDomains.split(',')||[];
+        var accessAllowDomains = parameters.accessAllowDomains.split(',') || [];
 
         var key = keyApi.generateApplicationKey({
             username: 'admin',
             appName: parameters.appName,
             keyType: parameters.keyType,
             callbackUrl: parameters.callbackUrl,
-            accessAllowDomains:accessAllowDomains,
+            accessAllowDomains: accessAllowDomains,
             validityTime: parameters.validityTime
         });
 
@@ -29,6 +29,24 @@ var resource = (function () {
 
     var refreshToken = function (context) {
 
+        var parameters = request.getContent();
+        var accessAllowDomains = parameters.accessAllowDomains.split(',') || [];
+        log.info(accessAllowDomains);
+
+        var key = keyApi.refreshToken({
+            username: 'admin',
+            appName: parameters.appName,
+            keyType: parameters.keyType,
+            oldAccessToken: parameters.oldAccessToken,
+            accessAllowDomains: accessAllowDomains,
+            clientId: parameters.clientId,
+            clientSecret: parameters.clientSecret,
+            validityTime: parameters.validityTime
+        });
+
+        log.info(key);
+
+        return key;
     };
 
     return{
