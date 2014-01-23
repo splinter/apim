@@ -234,7 +234,7 @@ $(function () {
             if (APP_STORE.showKeys) {
                 return false;
             }
-            Views.mirror(APP_STORE.productionKeys,data);
+            Views.mirror(APP_STORE.productionKeys, data);
             return true;
         },
         afterRender: function () {
@@ -254,16 +254,47 @@ $(function () {
     Views.extend('defaultSandboxKeyView', {
         id: 'visibleSandboxKeyView',
         partial: 'subscriptions/sub-keys-visible',
-        resolveRender: function () {
-            //Only render the view if sandbox keys are present
-            if (APP_STORE.sandboxKeys) {
-                return true;
+        resolveRender: function (data) {
+
+            if(!APP_STORE.sandboxKeys){
+                 return false;
             }
+            if(!APP_STORE.showKeys){
+                return false;
+            }
+            //Only render the view if sandbox keys are present
+           // if ((APP_STORE.sandboxKeys) && (APP_STORE.showKeys)) {
+                Views.mirror(APP_STORE.sandboxKeys, data);
+                return true;
+            //}
         },
         afterRender: function () {
         },
         subscriptions: [EV_SHOW_KEYS, EV_GENERATE_SAND_TOKEN]
     });
+
+    Views.extend('defaultSandboxKeyView', {
+        id: 'hiddenSandboxKeyView',
+        subscriptions: [EV_SHOW_KEYS, EV_HIDE_KEYS, EV_GENERATE_SAND_TOKEN],
+        partial: 'subscriptions/sub-keys-hidden',
+        resolveRender: function (data) {
+            console.info(APP_STORE.sandboxKeys);
+
+            if(APP_STORE.showKeys){
+                return false;
+            }
+
+            if(!APP_STORE.sandboxKeys){
+                return false;
+            }
+
+            Views.mirror(APP_STORE.sandboxKeys, data);
+            return true;
+        },
+        afterRender: function () {
+
+        }
+    })
 
     /*
      Domain View
