@@ -10,25 +10,25 @@
 
         {{#each apps}}
         <!--The appid of each app is stored as a meta data attribute-->
-        <tr data-appid='{{id}}'>
-            <td>
+        <tr id='row-{{id}}' data-id='{{id}}'>
+            <td data-field-name='name' data-field='text' data-value='{{name}}'>
                 {{name}}
             </td>
             <td>
                 {{tier}}
             </td>
-            <td>
+            <td data-field-name='callbackUrl' data-field='text' data-value='{{callbackUrl}}'>
                 {{callbackUrl}}
             </td>
-            <td>
+            <td data-field-name='description' data-field='text' data-value='{{description}}'>
                 {{description}}
             </td>
-            <!--td>
-                <a class='icon-edit'> Edit </a>
+            <td data-action='edit'>
             </td>
-            <td>
-                <a class='icon-trash'> Delete </a>
-            </td-->
+            <td data-action='cancel'>
+            </td>
+            <td data-action='delete'>
+            </td>
         </tr>
         {{/each}}
 
