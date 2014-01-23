@@ -65,6 +65,14 @@ $(function(){
         clearViews(this.viewMap);
     };
 
+    ViewManagement.prototype.mirror=function(fromObj,toObj){
+        for(var prop in fromObj){
+            toObj[prop]=fromObj[prop];
+        }
+
+        return toObj;
+    };
+
     function ViewProxy(view){
         this.view=view;
         var that=this;
@@ -75,9 +83,11 @@ $(function(){
     }
 
     ViewProxy.prototype.invoke=function(data){
+        console.info('invoking view id: '+this.view.id);
         this.view.beforeRender(data);
 
-        if((!this.view.disabled)&&(this.view.resolveRender())){
+
+        if((!this.view.disabled)&&(this.view.resolveRender(data))){
             this.view.render(this.view.partial,data,this.view.container,this.view.afterRender);
         }
     };
@@ -89,6 +99,8 @@ $(function(){
     ViewProxy.prototype.getId=function(){
        return this.view.id;
     };
+
+
 
     /*
      The function renders a partial with the provided data into the given container
