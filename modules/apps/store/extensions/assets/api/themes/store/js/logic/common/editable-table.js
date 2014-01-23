@@ -47,6 +47,9 @@ $(function () {
         else if (action == 'cancel') {
             resetRow(id, tr);
         }
+        else if(action=='save'){
+           //Perform a save operation
+        }
     };
 
     var populateRow = function (id, tr) {
@@ -56,13 +59,16 @@ $(function () {
             var td = this;
             var fieldType = $(td).data('field');
             var action = $(td).data('action');
+            var transitionsString=$(td).data('transitions');
+            var transitions;
 
             if (fieldType) {
                 populateTextbox(td);
             }
-            var resolveScript = "Edtable.resolve('" + id + "','" + action + "');";
-            if (action == 'cancel') {
-                $(td).html('<button class="btn"  onClick="' + resolveScript + '">Cancel</button>')
+
+            if(transitionsString){
+                transitions=transitionsString.split(',');
+                populateTransitions(id,td,transitions);
             }
         });
     };
@@ -70,15 +76,31 @@ $(function () {
     var populateTextbox = function (td) {
         //Save the existing value
         var existingValue = $(td).data('value');
-        console.info(existingValue);
         $(td).html('<input class="input-small" type="text" value="' + existingValue + '"/>');
     };
+
+    var populateTransitions=function(id,td,transitions){
+        var resolveScript;
+        $(td).html('');
+        for(var index in transitions){
+            console.info('adding save and cancel');
+            resolveScript = "Edtable.resolve('" + id + "','" + transitions[index] + "');";
+            $(td).append('<button class="btn"  onClick="' + resolveScript + '">'+transitions[index]+'</button>')
+        }
+    }
 
     var resetRow = function (id, tr) {
         $(tr).find('td').each(function () {
             var td = this;
             var existingValue = $(td).data('value');
+            var action=$(td).data('action');
             $(td).html(existingValue);
+            var resolveScript = "Edtable.resolve('" + id + "','" + action + "');";
+            if(action=='edit'){
+                $(td).html('<button class="btn" onClick="' + resolveScript + '">Edit</button>');
+            }
         });
     };
+
+
 });
