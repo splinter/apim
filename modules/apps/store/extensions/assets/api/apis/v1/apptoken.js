@@ -11,7 +11,8 @@ var resource = (function () {
 
         var parameters = context.request.getAllParameters();
         var accessAllowDomains = parameters.accessAllowDomains.split(',') || [];
-
+        log.info(parameters);
+        log.info(accessAllowDomains);
         var key = keyApi.generateApplicationKey({
             username: 'admin',
             appName: parameters.appName,

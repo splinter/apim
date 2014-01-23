@@ -47,6 +47,7 @@ var serviceModule = (function () {
      options.validityTime
      */
     KeyService.prototype.generateApplicationKey = function (options) {
+        log.info(options);
         var result = this.instance.getApplicationKey(options.username, options.appName, options.keyType, options.callbackUrl,
             options.accessAllowDomains, options.validityTime);
         return result;

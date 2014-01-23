@@ -4,6 +4,7 @@ $(function () {
      The location of the templates used in the rendering
      */
     var API_SUBS_URL = '/store/resources/api/v1/subscription/';
+    var API_TOKEN_URL = '/store/resources/api/v1/apptoken/a';
 
     /*
      The containers in which the UI components will be rendered
@@ -45,7 +46,7 @@ $(function () {
     /*
 
      */
-    var findAppDetails=function(appName){
+    var findAppDetails = function (appName) {
         var apps = metadata.appsWithSubs;
         var app;
         for (var appIndex in apps) {
@@ -59,19 +60,38 @@ $(function () {
         return null;
     };
 
+
     var attachGenerateProdToken = function () {
         ///We need to prevent the afterRender function from been inherited by child views
         //otherwise this method will be invoked by child views
         //console.info('Attaching generate button');
         $('#btn-generate-Production-token').on('click', function () {
             var appName = $('#subscription-selection').val();
-            events.publish(EV_GENERATE_PROD_TOKEN, {appName: appName});
+            var appDetails = findAppDetails(appName);
+            var tokenRequestData = {};
+            tokenRequestData['appName'] = appName;
+            tokenRequestData['keyType'] = 'Production';
+            tokenRequestData['accessAllowDomains'] = 'ALL';
+            tokenRequestData['callbackUrl'] = appDetails.callbackUrl||'';
+            tokenRequestData['validityTime'] = appDetails.prodValidityTime;
+            $.ajax({
+                type: 'POST',
+                url: API_TOKEN_URL,
+                data: tokenRequestData,
+                success: function (data) {
+                    var jsonData=JSON.parse(data);
+                    events.publish(EV_GENERATE_PROD_TOKEN,jsonData);
+                }
+            });
         });
+    };
+
+    var attachRefreshProdToken =function(){
+
     };
 
     var attachGenerateSandToken = function () {
 
-        console.info('Attaching generate button for sandbox');
         $('#btn-generate-Sandbox-token').on('click', function () {
             var appName = $('#subscription-selection').val();
             events.publish(EV_GENERATE_SAND_TOKEN, {appName: appName});
@@ -182,11 +202,12 @@ $(function () {
         }
     });
 
-    Views.extend('defaultSandboxDomainView',{
-        id:'updateSandboxDomainVIew',
-        partial:'subscriptions/sub-domain-update',
-        afterRender:function(){},
-        subscriptions:[EV_GENERATE_SAND_TOKEN]
+    Views.extend('defaultSandboxDomainView', {
+        id: 'updateSandboxDomainVIew',
+        partial: 'subscriptions/sub-domain-update',
+        afterRender: function () {
+        },
+        subscriptions: [EV_GENERATE_SAND_TOKEN]
     });
 
     /*
