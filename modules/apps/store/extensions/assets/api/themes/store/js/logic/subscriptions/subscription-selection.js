@@ -26,6 +26,8 @@ $(function () {
     var EV_UPDATE_DOMAIN = 'eventUpdateDomain';
     var EV_GENERATE_PROD_TOKEN = 'eventGenerateProductionToken';
     var EV_GENERATE_SAND_TOKEN = 'eventGenerateSandboxToken';
+    var EV_RGEN_PROD_TOKEN='eventRegenerateProductionToken';
+    var EV_RGEN_SAND_TOKEN='eventRegenerateSandboxToken';
 
     var APP_STORE = {};
 
@@ -183,6 +185,15 @@ $(function () {
         });
     };
 
+    /*
+    The function is used to attach the logic which will regenerate the token
+     */
+    var attachRegenerateProductionToken=function(){
+         $('#btn-refresh-Production-token').on('click',function(){
+                 console.info('The user wants to regenerate the token');
+         });
+    };
+
 
     events.register(EV_APP_SELECT);
     events.register(EV_SHOW_KEYS);
@@ -191,6 +202,8 @@ $(function () {
     events.register(EV_UPDATE_DOMAIN);
     events.register(EV_GENERATE_SAND_TOKEN);
     events.register(EV_HIDE_KEYS);
+    events.register(EV_RGEN_PROD_TOKEN);
+    events.register(EV_RGEN_SAND_TOKEN);
 
     /*
      Keys View
@@ -230,8 +243,7 @@ $(function () {
             //}
             //return false;
         },
-        afterRender: function () {
-        }
+        afterRender: attachRegenerateProductionToken
     });
 
     Views.extend('defaultProductionKeyView', {
@@ -251,8 +263,7 @@ $(function () {
             Views.mirror(APP_STORE.productionKeys, data);
             return true;
         },
-        afterRender: function () {
-        }
+        afterRender: attachRegenerateProductionToken
     });
 
     //Sandbox view
