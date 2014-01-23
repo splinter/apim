@@ -214,12 +214,21 @@ $(function () {
         partial: 'subscriptions/sub-keys-visible',
         subscriptions: [EV_SHOW_KEYS, EV_GENERATE_PROD_TOKEN],
         resolveRender: function (data) {
+
+            if(!APP_STORE.showKeys){
+                return false;
+            }
+
+            if(!APP_STORE.productionKeys){
+                return false;
+            }
+
             //Determine if the keys need to be visible
-            if (APP_STORE.showKeys) {
+            //if (APP_STORE.showKeys) {
                 Views.mirror(APP_STORE.productionKeys, data);
                 return true;
-            }
-            return false;
+            //}
+            //return false;
         },
         afterRender: function () {
         }
@@ -234,6 +243,11 @@ $(function () {
             if (APP_STORE.showKeys) {
                 return false;
             }
+
+            if(!APP_STORE.productionKeys){
+                return false;
+            }
+
             Views.mirror(APP_STORE.productionKeys, data);
             return true;
         },
@@ -294,7 +308,7 @@ $(function () {
         afterRender: function () {
 
         }
-    })
+    });
 
     /*
      Domain View
