@@ -8,7 +8,10 @@ var resource=(function(){
      */
     var updateDomains=function(context){
 
+        log.info('updating domains');
+
         var KeyService=require('/extensions/assets/api/services/key.js').serviceModule;
+
 
         var keyApi=new KeyService.KeyService();
 
@@ -16,12 +19,16 @@ var resource=(function(){
 
         var parameters=request.getContent();
 
-        var accessAllowDomains=parameters.accessAllowDomains.split(',')||[];
+        var accessAllowDomains=parameters.accessAllowedDomains.split(',')||[];
 
-        var result=kepApi.updateAccessAllowDomains({
+        log.info(parameters);
+
+        var result=keyApi.updateAccessAllowDomains({
             accessToken:parameters.accessToken,
             accessAllowDomains:accessAllowDomains
         });
+
+        log.info(result);
 
     };
 

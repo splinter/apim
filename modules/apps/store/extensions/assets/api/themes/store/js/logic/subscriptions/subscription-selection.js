@@ -5,6 +5,7 @@ $(function () {
      */
     var API_SUBS_URL = '/store/resources/api/v1/subscription/';
     var API_TOKEN_URL = '/store/resources/api/v1/apptoken/a';
+    var API_DOMAIN_URL='/store/resources/api/v1/domain/a';
 
     /*
      The containers in which the UI components will be rendered
@@ -25,6 +26,8 @@ $(function () {
     var EV_UPDATE_DOMAIN = 'eventUpdateDomain';
     var EV_GENERATE_PROD_TOKEN = 'eventGenerateProductionToken';
     var EV_GENERATE_SAND_TOKEN = 'eventGenerateSandboxToken';
+
+    var APP_STORE={};
 
     /*
      The function returns the subscriptions of the given application
@@ -80,22 +83,99 @@ $(function () {
                 data: tokenRequestData,
                 success: function (data) {
                     var jsonData=JSON.parse(data);
+                    APP_STORE.productionKeys=jsonData;
                     events.publish(EV_GENERATE_PROD_TOKEN,jsonData);
                 }
             });
         });
     };
 
-    var attachRefreshProdToken =function(){
-
-    };
-
     var attachGenerateSandToken = function () {
 
         $('#btn-generate-Sandbox-token').on('click', function () {
             var appName = $('#subscription-selection').val();
-            events.publish(EV_GENERATE_SAND_TOKEN, {appName: appName});
+            var appDetails=findAppDetails(appName);
+            var tokenRequestData = {};
+            tokenRequestData['appName'] = appName;
+            tokenRequestData['keyType'] = 'Sandbox';
+            tokenRequestData['accessAllowDomains'] = 'ALL';
+            tokenRequestData['callbackUrl'] = appDetails.callbackUrl||'';
+            tokenRequestData['validityTime'] = appDetails.prodValidityTime;
+            $.ajax({
+                type: 'POST',
+                url: API_TOKEN_URL,
+                data: tokenRequestData,
+                success: function (data) {
+                    var jsonData=JSON.parse(data);
+                    APP_STORE.sandboxKeys=jsonData;
+                    events.publish(EV_GENERATE_SAND_TOKEN,jsonData);
+                }
+            });
+
         });
+    };
+
+    /*
+    The function sets up the production domain update button to
+    send an update request to the remote api
+     */
+    var attachUpdateProductionDomains=function(){
+
+        $('#btn-Production-updateDomains').on('click',function(){
+            var allowedDomains=$('#input-Production-allowedDomains').val();
+            console.info(JSON.stringify(APP_STORE.productionKeys));
+            var domainUpdateData={};
+            domainUpdateData['accessToken']=APP_STORE.productionKeys.accessToken;
+            domainUpdateData['accessAllowedDomains']=allowedDomains;
+
+            console.info('***Domain Update Data****');
+            console.info(JSON.stringify(domainUpdateData));
+            $.ajax({
+               type:'PUT',
+               url:API_DOMAIN_URL,
+               contentType:'application/json',
+               data:JSON.stringify(domainUpdateData),
+               success:function(data){
+                    console.info('Domain updated successfully');
+               }
+            });
+        });
+    };
+
+    var attachUpdateSandboxDomains=function(){
+
+        $('#btn-Sandbox-updateDomains').on('click',function(){
+            var allowedDomains=$('#input-Sandbox-allowedDomains').val();
+            console.info(JSON.stringify(APP_STORE.productionKeys));
+            var domainUpdateData={};
+            domainUpdateData['accessToken']=APP_STORE.sandboxKeys.accessToken;
+            domainUpdateData['accessAllowedDomains']=allowedDomains;
+
+            console.info('***Sanbox Domain Update Data***');
+            console.info(JSON.stringify(domainUpdateData));
+            $.ajax({
+                type:'PUT',
+                url:API_DOMAIN_URL,
+                contentType:'application/json',
+                data:JSON.stringify(domainUpdateData),
+                success:function(data){
+                    console.info('Domain updated successfully');
+                }
+            });
+        });
+    };
+
+    /*
+    The function listens for the user to check and uncheck the show keys checkbox
+    and then broadcasts the appropriate event
+     */
+    var attachShowCheckbox=function(){
+
+         $('#input-checkbox-showkeys').change(function(){
+             var isChecked=$('#input-checkbox-showkeys').prop('checked');
+             console.info('Show Keys: '+isChecked);
+             APP_STORE['showKeys']=isChecked;
+         });
     };
 
 
@@ -162,9 +242,6 @@ $(function () {
         partial: 'subscriptions/sub-keys-visible',
         afterRender: function () {
         },
-        beforeRender: function (data) {
-
-        },
         subscriptions: [EV_SHOW_KEYS, EV_GENERATE_SAND_TOKEN]
     });
 
@@ -177,6 +254,9 @@ $(function () {
         id: 'defaultProductionDomainView',
         container: PROD_DOMAIN_CONTAINER,
         partial: 'subscriptions/sub-domain-token',
+        beforeRender:function(data){
+          data['environment']=Views.translate('Production');
+        },
         subscriptions: [EV_APP_SELECT],
         afterRender: function () {
         }
@@ -186,18 +266,16 @@ $(function () {
         id: 'updateProductionDomainView',
         partial: 'subscriptions/sub-domain-update',
         subscriptions: [EV_GENERATE_PROD_TOKEN],
-        beforeRender: function (data) {
-
-        },
-        afterRender: function () {
-        }
-
+        afterRender:attachUpdateProductionDomains
     });
 
     //Sandbox view
     Views.extend('defaultProductionDomainView', {
         id: 'defaultSandboxDomainView',
         container: SAND_DOMAIN_CONTAINER,
+        beforeRender:function(data){
+          data['environment']=Views.translate('Sandbox');
+        },
         afterRender: function () {
         }
     });
@@ -205,8 +283,7 @@ $(function () {
     Views.extend('defaultSandboxDomainView', {
         id: 'updateSandboxDomainVIew',
         partial: 'subscriptions/sub-domain-update',
-        afterRender: function () {
-        },
+        afterRender: attachUpdateSandboxDomains,
         subscriptions: [EV_GENERATE_SAND_TOKEN]
     });
 
@@ -237,8 +314,7 @@ $(function () {
         container: CONTROL_CONTAINER,
         partial: 'subscriptions/sub-control-panel',
         subscriptions: [EV_APP_SELECT],
-        afterRender: function () {
-        }
+        afterRender: attachShowCheckbox
     });
 
 
@@ -248,6 +324,11 @@ $(function () {
     //Connect the events
     $('#subscription-selection').on('change', function () {
         var appName = $('#subscription-selection').val();
+        APP_STORE={};
+        APP_STORE['appName']=appName;
+        APP_STORE['appDetails']=findAppDetails(appName);
+        APP_STORE['productionKeys']=null;
+        APP_STORE['sandboxKeys']=null;
         events.publish(EV_APP_SELECT, {appName: appName});
     });
 

@@ -83,7 +83,8 @@ var serviceModule = (function () {
      options.accessAllowDomains
      */
     KeyService.prototype.updateAccessAllowDomains = function (options) {
-        var accessAllowDomains = this.instance.updateAccessAllowDomains(options.oldAccessToken,
+        log.info(options);
+        var accessAllowDomains = this.instance.updateAccessAllowDomains(options.accessToken,
             options.accessAllowDomains);
     };
 
