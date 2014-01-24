@@ -34,6 +34,26 @@ var serviceModule=(function(){
     };
 
     /*
+    options.newAppName
+    options.oldAppName,
+    options.username
+    options.tier
+    options.callbackUrl
+    options.description
+     */
+    AppService.prototype.updateApplication=function(options){
+
+    };
+
+    /*
+    options.appName
+    options.username
+     */
+    AppService.prototype.deleteApplication=function(options){
+        var result=this.instance.removeApplication(options.appName,options.username);
+    };
+
+    /*
     Used to process the applications array
      */
     var processAppsList=function(apps){
