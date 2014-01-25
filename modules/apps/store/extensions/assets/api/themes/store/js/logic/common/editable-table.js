@@ -2,7 +2,7 @@ var Edtable;
 
 $(function () {
     var UPDATE_API = '/store/resources/api/v1/application/a';
-    var DELETE_API = '';
+    var DELETE_API = '/store/resources/api/v1/application/';
 
     function EditableTable(configs) {
         init('#' + configs.tableContainer);
@@ -39,9 +39,7 @@ $(function () {
     Edtable['resolve'] = function (id, action) {
         var tr = $('#row-' + id);
         if (action == 'delete') {
-            //Delete the app with the provided id
-            //Delete the selected row
-            $('#row-' + id).remove();
+            deleteRow(id,tr);
         }
         else if (action == 'edit') {
             populateRow(id, tr);
@@ -175,6 +173,21 @@ $(function () {
         var firstLetter = oldFieldName.charAt(0);
 
         return 'new' + firstLetter.toUpperCase() + restOfNameWithoutFirstLetter;
+    };
+
+    /*
+    The function invokes the api to delete an application
+     */
+    var deleteRow=function(id,tr){
+        var dataObject=createDataObject(id,tr);
+        $.ajax({
+            type:'DELETE',
+            url:DELETE_API+dataObject.appName,
+            success:function(){
+                alert('Asset deleted successfully!');
+                $('#row-' + id).remove();
+            }
+        })
     };
 
 

@@ -28,12 +28,31 @@ var resource = (function () {
     };
 
     var deleteApplication = function (context) {
-
+        log.info('Application delete');
         var AppService = require('/extensions/assets/api/services/app.js').serviceModule;
-
         appApi = new AppService.AppService();
-
         appApi.init(jagg, session);
+
+
+        var uriMatcher = new URIMatcher(context.request.getRequestURI());
+        var URI = '/{context}/resources/{asset}/{version}/application/{appName}';
+
+        log.info(request.getRequestURI());
+
+        var isMatch=uriMatcher.match(URI);
+        log.info(stringify(uriMatcher.elements()));
+
+
+        if(isMatch){
+            var appName=uriMatcher.elements().appName;
+            log.info('Removing '+appName);
+            appApi.deleteApplication({
+                appName:appName,
+                username:'admin'
+            });
+
+            return {isRemoved:true};
+        }
 
         //var isRemoved=appApi.deleteApplication()
 
