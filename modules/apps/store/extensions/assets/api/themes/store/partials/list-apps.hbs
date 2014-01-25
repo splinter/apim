@@ -11,10 +11,10 @@
         {{#each apps}}
         <!--The appid of each app is stored as a meta data attribute-->
         <tr id='row-{{id}}' data-id='{{id}}'>
-            <td data-field-name='name' data-field='text' data-value='{{name}}'>
+            <td data-field-name='appName'  data-field='text' data-value='{{name}}' >
                 {{name}}
             </td>
-            <td>
+            <td data-field-name='tier' data-value='{{tier}}'>
                 {{tier}}
             </td>
             <td data-field-name='callbackUrl' data-field='text' data-value='{{callbackUrl}}'>

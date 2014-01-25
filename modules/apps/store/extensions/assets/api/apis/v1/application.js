@@ -41,6 +41,9 @@ var resource = (function () {
     };
 
     var updateApplication = function (context) {
+
+        log.info('Entered update application');
+
         var parameters = request.getContent();
 
         var AppService = require('/extensions/assets/api/services/app.js').serviceModule;
@@ -49,13 +52,15 @@ var resource = (function () {
 
         appApi.init(jagg, session);
 
+        log.info(parameters);
+
         var result=appApi.updateApplication({
             newAppName:parameters.newAppName,
-            oldAppName:parameters.oldAppName,
+            oldAppName:parameters.appName,
             username:'admin',
             tier:parameters.tier,
-            callbackUrl:parameters.callbackUrl,
-            description:parameters.description
+            callbackUrl:parameters.newCallbackUrl,
+            description:parameters.newDescription
         });
 
         return result;
