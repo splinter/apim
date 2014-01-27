@@ -91,13 +91,26 @@ $(function () {
         switch(keyType){
             case 'production':
                 appDetails.prodAuthorizedDomains=domains;
-                APP_STORE.productionKeys.accessallowdomains=domains;
+                APP_STORE.productionKeys.accessallowdomains=domains.split(',');
                 break;
             case 'sandbox':
                 appDetails.sandboxAuthorizedDomains=domains;
-                APP_STORE.sandboxKeys.accessallowdomains=domains;
+                APP_STORE.sandboxKeys.accessallowdomains=domains.split(',');
                 break;
         }
+    };
+
+    /*
+    The function is used to check if the keyDetails object contains an
+    accessToken, consumerKey and a consumerSecret
+     */
+    var isEmptyKey=function(keyDetails){
+        if((keyDetails.consumerKey)&&(keyDetails.consumerSecret)&&(keyDetails.accessToken))
+        {
+            return true;
+        }
+
+        return false;
     };
 
     /*
@@ -130,6 +143,32 @@ $(function () {
             default:
                 break;
         }
+
+        return isEmptyKey(keyData)?keyData:null;
+    };
+
+    var updateAppDetailsWithKey=function(appName,keyType,keyDetails){
+        var appDetails = findAppDetails(appName);
+        var keyData = {};
+
+        switch(keyType){
+            case 'production':
+                appDetails.prodKey=keyDetails['accessToken'];
+                appDetails.prodConsumerKey=keyDetails['consumerKey'];
+                appDetails.prodConsumerSecret=keyDetails['consumerSecret'];
+                appDetails.prodValidityTime=keyDetails['validityTime'];
+                appDetails.prodAuthorizedDomains=keyDetails['accessallowdomains'].split(',');
+                break;
+            case 'sandbox':
+                appDetails.sandboxKey=keyDetails['accessToken'];
+                appDetails.sandboxConsumerKey=keyDetails['consumerKey'];
+                appDetails.sandboxConsumerSecret=keyDetails['consumerSecret'];
+                appDetails.sandboxValidityTime=keyDetails['validityTime'];
+                appDetails.sandboxAuthorizedDomains=keyDetails['accessallowdomains'].split(',');
+                break;
+            default:
+                break;
+        }
     };
 
     var attachGenerateProdToken = function () {
@@ -152,6 +191,8 @@ $(function () {
                 success: function (data) {
                     var jsonData = JSON.parse(data);
                     APP_STORE.productionKeys = jsonData;
+                    var appName= $('#subscription-selection').val();
+                    updateAppDetailsWithKey(appName,'production',jsonData);
                     events.publish(EV_GENERATE_PROD_TOKEN, jsonData);
                 }
             });
@@ -493,6 +534,10 @@ $(function () {
         APP_STORE = {};
         APP_STORE['appName'] = appName;
         APP_STORE['appDetails'] = findAppDetails(appName);
+        var prodKeys=getKeysFromAppDetails(appName,'production');
+        console.info('Obtaining existing key information ');
+        console.info(JSON.stringify(prodKeys));
+        console.info('Finished obtaining key information');
         APP_STORE['productionKeys'] = null;
         APP_STORE['sandboxKeys'] = null;
         APP_STORE['showKeys'] = false;
