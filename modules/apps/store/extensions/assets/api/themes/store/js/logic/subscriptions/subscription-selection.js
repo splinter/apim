@@ -18,8 +18,8 @@ $(function () {
     var SAND_KEYS_CONTAINER = '#sand-token-view';
     var SAND_DOMAIN_CONTAINER = '#sand-domain-view';
 
-    var DEFAULT_TOKEN_VALID_TIME=36000;
-    var DEFAULT_ACCESS_ALLOW_DOMAINS='ALL';
+    var DEFAULT_TOKEN_VALID_TIME = 36000;
+    var DEFAULT_ACCESS_ALLOW_DOMAINS = 'ALL';
 
     var EV_APP_SELECT = 'eventAppSelection';
     var EV_SHOW_KEYS = 'eventShowKeys';
@@ -28,8 +28,8 @@ $(function () {
     var EV_UPDATE_DOMAIN = 'eventUpdateDomain';
     var EV_GENERATE_PROD_TOKEN = 'eventGenerateProductionToken';
     var EV_GENERATE_SAND_TOKEN = 'eventGenerateSandboxToken';
-    var EV_RGEN_PROD_TOKEN='eventRegenerateProductionToken';
-    var EV_RGEN_SAND_TOKEN='eventRegenerateSandboxToken';
+    var EV_RGEN_PROD_TOKEN = 'eventRegenerateProductionToken';
+    var EV_RGEN_SAND_TOKEN = 'eventRegenerateSandboxToken';
 
     var APP_STORE = {};
 
@@ -77,9 +77,9 @@ $(function () {
             var tokenRequestData = {};
             tokenRequestData['appName'] = appName;
             tokenRequestData['keyType'] = 'Production';
-            tokenRequestData['accessAllowDomains'] = $('#input-Production-allowedDomains').val()||DEFAULT_ACCESS_ALLOW_DOMAINS;
+            tokenRequestData['accessAllowDomains'] = $('#input-Production-allowedDomains').val() || DEFAULT_ACCESS_ALLOW_DOMAINS;
             tokenRequestData['callbackUrl'] = appDetails.callbackUrl || '';
-            tokenRequestData['validityTime'] = $('#input-Production-validityTime').val()||DEFAULT_TOKEN_VALID_TIME;// appDetails.prodValidityTime;
+            tokenRequestData['validityTime'] = $('#input-Production-validityTime').val() || DEFAULT_TOKEN_VALID_TIME;// appDetails.prodValidityTime;
             $.ajax({
                 type: 'POST',
                 url: API_TOKEN_URL,
@@ -101,9 +101,9 @@ $(function () {
             var tokenRequestData = {};
             tokenRequestData['appName'] = appName;
             tokenRequestData['keyType'] = 'Sandbox';
-            tokenRequestData['accessAllowDomains'] = $('#input-Sandbox-allowedDomains').val()||DEFAULT_ACCESS_ALLOW_DOMAINS;
+            tokenRequestData['accessAllowDomains'] = $('#input-Sandbox-allowedDomains').val() || DEFAULT_ACCESS_ALLOW_DOMAINS;
             tokenRequestData['callbackUrl'] = appDetails.callbackUrl || '';
-            tokenRequestData['validityTime'] = $('#input-Sandbox-validityTime').val()||DEFAULT_TOKEN_VALID_TIME;
+            tokenRequestData['validityTime'] = $('#input-Sandbox-validityTime').val() || DEFAULT_TOKEN_VALID_TIME;
             $.ajax({
                 type: 'POST',
                 url: API_TOKEN_URL,
@@ -139,6 +139,7 @@ $(function () {
                 contentType: 'application/json',
                 data: JSON.stringify(domainUpdateData),
                 success: function (data) {
+                    alert('Domain updated sucessfully');
                     console.info('Domain updated successfully');
                 }
             });
@@ -162,6 +163,7 @@ $(function () {
                 contentType: 'application/json',
                 data: JSON.stringify(domainUpdateData),
                 success: function (data) {
+                    alert('Domain updated successfully');
                     console.info('Domain updated successfully');
                 }
             });
@@ -188,12 +190,18 @@ $(function () {
     };
 
     /*
-    The function is used to attach the logic which will regenerate the token
+     The function is used to attach the logic which will regenerate the token
      */
-    var attachRegenerateProductionToken=function(){
-         $('#btn-refresh-Production-token').on('click',function(){
-                 console.info('The user wants to regenerate the token');
-         });
+    var attachRegenerateProductionToken = function () {
+        $('#btn-refresh-Production-token').on('click', function () {
+            console.info('The user wants to regenerate the token');
+            var tokenRefreshData = {};
+            var appName = $('#subscription-selection').val();
+            var appDetails = findAppDetails(appName);
+            tokenRefreshData['appName'] = appName;
+            tokenRefreshData['keyType']='Production';
+            tokenRefreshData['oldAccessToken']=APP_STORE.productionKeys.accessToken;
+        });
     };
 
 
@@ -230,18 +238,18 @@ $(function () {
         subscriptions: [EV_SHOW_KEYS, EV_GENERATE_PROD_TOKEN],
         resolveRender: function (data) {
 
-            if(!APP_STORE.showKeys){
+            if (!APP_STORE.showKeys) {
                 return false;
             }
 
-            if(!APP_STORE.productionKeys){
+            if (!APP_STORE.productionKeys) {
                 return false;
             }
 
             //Determine if the keys need to be visible
             //if (APP_STORE.showKeys) {
-                Views.mirror(APP_STORE.productionKeys, data);
-                return true;
+            Views.mirror(APP_STORE.productionKeys, data);
+            return true;
             //}
             //return false;
         },
@@ -258,7 +266,7 @@ $(function () {
                 return false;
             }
 
-            if(!APP_STORE.productionKeys){
+            if (!APP_STORE.productionKeys) {
                 return false;
             }
 
@@ -283,16 +291,16 @@ $(function () {
         partial: 'subscriptions/sub-keys-visible',
         resolveRender: function (data) {
 
-            if(!APP_STORE.sandboxKeys){
-                 return false;
+            if (!APP_STORE.sandboxKeys) {
+                return false;
             }
-            if(!APP_STORE.showKeys){
+            if (!APP_STORE.showKeys) {
                 return false;
             }
             //Only render the view if sandbox keys are present
-           // if ((APP_STORE.sandboxKeys) && (APP_STORE.showKeys)) {
-                Views.mirror(APP_STORE.sandboxKeys, data);
-                return true;
+            // if ((APP_STORE.sandboxKeys) && (APP_STORE.showKeys)) {
+            Views.mirror(APP_STORE.sandboxKeys, data);
+            return true;
             //}
         },
         afterRender: function () {
@@ -307,11 +315,11 @@ $(function () {
         resolveRender: function (data) {
             console.info(APP_STORE.sandboxKeys);
 
-            if(APP_STORE.showKeys){
+            if (APP_STORE.showKeys) {
                 return false;
             }
 
-            if(!APP_STORE.sandboxKeys){
+            if (!APP_STORE.sandboxKeys) {
                 return false;
             }
 

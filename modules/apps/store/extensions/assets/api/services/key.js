@@ -13,6 +13,7 @@ var serviceModule = (function () {
 
     KeyService.prototype.init = function (context, session) {
         this.instance = context.module('manager').getAPIStoreObj();
+        this.subModule = context.module('subscription');
     };
 
     /*
@@ -84,8 +85,10 @@ var serviceModule = (function () {
      */
     KeyService.prototype.updateAccessAllowDomains = function (options) {
         log.info(options);
-        var accessAllowDomains = this.instance.updateAccessAllowDomains(options.accessToken,
+        var accessAllowDomains = this.subModule.updateAccessAllowDomains(options.accessToken,
             options.accessAllowDomains);
+
+        log.info(accessAllowDomains);
     };
 
     return{
