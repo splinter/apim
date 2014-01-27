@@ -4,8 +4,7 @@ The view is used to display the domain details
 <form>
     <fieldset>
         <h5>Allowed Domains</h5>
-        <textarea class='input-xlarge' id='input-{{environment}}-allowedDomains'>
-        </textarea>
+        <input type='text' class='input-xlarge' id='input-{{environment}}-allowedDomains' value='{{allowedDomains}}'>
         <span class='help-block'>Leaving empty or filling with ALL will allow all domains</span>
     </fieldset>
 </form>

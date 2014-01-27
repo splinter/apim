@@ -97,6 +97,8 @@ $(function () {
                 appDetails.sandboxAuthorizedDomains = domains;
                 APP_STORE.sandboxKeys.accessallowdomains = domains.split(',');
                 break;
+            default:
+                break;
         }
     };
 
@@ -250,7 +252,11 @@ $(function () {
                 data: JSON.stringify(domainUpdateData),
                 success: function (data) {
                     alert('Domain updated sucessfully');
-                    console.info('Domain updated successfully');
+                    //console.info(JSON.stringify(data));
+                    var allowedDomains = $('#input-Production-allowedDomains').val();
+                    //We need to update the APP_STORE and the metadata
+                    updateAcessAlloWDomains(APP_STORE.appName,'production',allowedDomains);
+
                 }
             });
         });
@@ -274,7 +280,9 @@ $(function () {
                 data: JSON.stringify(domainUpdateData),
                 success: function (data) {
                     alert('Domain updated successfully');
-                    console.info('Domain updated successfully');
+                    var allowedDomains = $('#input-Sandbox-allowedDomains').val();
+
+                    updateAcessAlloWDomains(APP_STORE.appName,'sandbox',allowedDomains);
                 }
             });
         });
@@ -323,6 +331,7 @@ $(function () {
                 contentType: 'application/json',
                 data: JSON.stringify(tokenRefreshData),
                 success: function (data) {
+                    ///Need to update the APP_STORE and the metadata store
                     alert('Token refreshed successfully!');
                 }
             });
@@ -485,7 +494,7 @@ $(function () {
         beforeRender: function (data) {
             data['environment'] = Views.translate('Production');
             data['validityTime'] = APP_STORE.appDetails.prodValidityTime;
-            data['allowedDomains'] = APP_STORE.appDetails.prodAuthorizedDomains || [];
+            data['allowedDomains'] = APP_STORE.appDetails.prodAuthorizedDomains ||DEFAULT_ACCESS_ALLOW_DOMAINS;
         },
         resolveRender: function () {
             if (APP_STORE.productionKeys) {
@@ -504,7 +513,8 @@ $(function () {
         partial: 'subscriptions/sub-domain-update',
         subscriptions: [EV_GENERATE_PROD_TOKEN,EV_APP_SELECT],
         afterRender: attachUpdateProductionDomains,
-        resolveRender: function () {
+        resolveRender: function (data) {
+            console.info('Domain updare view: '+JSON.stringify(data));
             if (APP_STORE.productionKeys) {
                 return true;
             }
@@ -520,7 +530,7 @@ $(function () {
         beforeRender: function (data) {
             data['environment'] = Views.translate('Sandbox');
             data['validityTime'] = APP_STORE.appDetails.sandValidityTime;
-            data['allowedDomains'] = APP_STORE.appDetails.sandAuthorizedDomains || [];
+            data['allowedDomains'] = APP_STORE.appDetails.sandboxAuthorizedDomains ||DEFAULT_ACCESS_ALLOW_DOMAINS;
         },
         resolveRender:function(){
             if(APP_STORE.sandboxKeys){
