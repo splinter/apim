@@ -50,7 +50,7 @@ $(function () {
     };
 
     /*
-
+     The function obtains the details of a given app from the metadata
      */
     var findAppDetails = function (appName) {
         var apps = metadata.appsWithSubs;
@@ -70,43 +70,42 @@ $(function () {
      The function is used to update the metadata store and APP_STORE with details obtain
      from the server. This method should be called after a token generate or refresh
      */
-    var updateKeyDetails = function (appName, keyType,key) {
-          var appDetails=findAppDetails(appName);
+    var updateKeyDetails = function (appName, keyType, key) {
+        var appDetails = findAppDetails(appName);
 
-          switch(keyType){
-              case 'production':
-                  appDetails.prodKey=key;
-                  APP_STORE.productionKeys.accessToken=key;
-                  break;
-              case 'sandbox':
-                  appDetails.sandboxKey=serverDetails.accessToke;
-                  APP_STORE.sandboxKeys.accessToken=serverDetails.accessToken;
-                  break;
-          }
-    };
-
-    var updateAcessAlloWDomains=function(appName,keyType,domains){
-        var appDetails=findAppDetails(appName);
-
-        switch(keyType){
+        switch (keyType) {
             case 'production':
-                appDetails.prodAuthorizedDomains=domains;
-                APP_STORE.productionKeys.accessallowdomains=domains.split(',');
+                appDetails.prodKey = key;
+                APP_STORE.productionKeys.accessToken = key;
                 break;
             case 'sandbox':
-                appDetails.sandboxAuthorizedDomains=domains;
-                APP_STORE.sandboxKeys.accessallowdomains=domains.split(',');
+                appDetails.sandboxKey = serverDetails.accessToke;
+                APP_STORE.sandboxKeys.accessToken = serverDetails.accessToken;
+                break;
+        }
+    };
+
+    var updateAcessAlloWDomains = function (appName, keyType, domains) {
+        var appDetails = findAppDetails(appName);
+
+        switch (keyType) {
+            case 'production':
+                appDetails.prodAuthorizedDomains = domains;
+                APP_STORE.productionKeys.accessallowdomains = domains.split(',');
+                break;
+            case 'sandbox':
+                appDetails.sandboxAuthorizedDomains = domains;
+                APP_STORE.sandboxKeys.accessallowdomains = domains.split(',');
                 break;
         }
     };
 
     /*
-    The function is used to check if the keyDetails object contains an
-    accessToken, consumerKey and a consumerSecret
+     The function is used to check if the keyDetails object contains an
+     accessToken, consumerKey and a consumerSecret
      */
-    var isEmptyKey=function(keyDetails){
-        if((keyDetails.consumerKey)&&(keyDetails.consumerSecret)&&(keyDetails.accessToken))
-        {
+    var isEmptyKey = function (keyDetails) {
+        if ((keyDetails.consumerKey) && (keyDetails.consumerSecret) && (keyDetails.accessToken)) {
             return true;
         }
 
@@ -125,46 +124,49 @@ $(function () {
         keyData['validityTime'] = '';
         keyData['accessAllowDomains'] = '';
 
-        switch(keyType){
+        switch (keyType) {
             case 'production':
-                keyData['accessToken']=appDetails.prodKey;
-                keyData['consumerKey']=appDetails.prodConsumerKey;
-                keyData['consumerSecret']=appDetails.prodConsumerSecret;
-                keyData['validityTime']=appDetails.prodValidityTime;
-                keyData['accessAllowDomains']=appDetails.prodAuthorizedDomains;
+                keyData['accessToken'] = appDetails.prodKey;
+                keyData['consumerKey'] = appDetails.prodConsumerKey;
+                keyData['consumerSecret'] = appDetails.prodConsumerSecret;
+                keyData['validityTime'] = appDetails.prodValidityTime;
+                keyData['accessAllowDomains'] = appDetails.prodAuthorizedDomains;
                 break;
             case 'sandbox':
-                keyData['accessToken']=appDetails.sandboxKey;
-                keyData['consumerKey']=appDetails.sandboxConsumerKey;
-                keyData['consumerSecret']=appDetails.sandboxConsumerSecret;
-                keyData['validityTime']=appDetails.sandboxValidityTime;
-                keyData['accessAllowDomains']=appDetails.sandboxAuthorizedDomains;
+                keyData['accessToken'] = appDetails.sandboxKey;
+                keyData['consumerKey'] = appDetails.sandboxConsumerKey;
+                keyData['consumerSecret'] = appDetails.sandboxConsumerSecret;
+                keyData['validityTime'] = appDetails.sandboxValidityTime;
+                keyData['accessAllowDomains'] = appDetails.sandboxAuthorizedDomains;
                 break;
             default:
                 break;
         }
 
-        return isEmptyKey(keyData)?keyData:null;
+        return isEmptyKey(keyData) ? keyData : null;
     };
 
-    var updateAppDetailsWithKey=function(appName,keyType,keyDetails){
+    /*
+     The function uses the responses generated by the token service to update the meta data store
+     */
+    var updateAppDetailsWithKey = function (appName, keyType, keyDetails) {
         var appDetails = findAppDetails(appName);
         var keyData = {};
 
-        switch(keyType){
+        switch (keyType) {
             case 'production':
-                appDetails.prodKey=keyDetails['accessToken'];
-                appDetails.prodConsumerKey=keyDetails['consumerKey'];
-                appDetails.prodConsumerSecret=keyDetails['consumerSecret'];
-                appDetails.prodValidityTime=keyDetails['validityTime'];
-                appDetails.prodAuthorizedDomains=keyDetails['accessallowdomains'].split(',');
+                appDetails.prodKey = keyDetails['accessToken'];
+                appDetails.prodConsumerKey = keyDetails['consumerKey'];
+                appDetails.prodConsumerSecret = keyDetails['consumerSecret'];
+                appDetails.prodValidityTime = keyDetails['validityTime'];
+                appDetails.prodAuthorizedDomains = keyDetails['accessallowdomains'].split(',');
                 break;
             case 'sandbox':
-                appDetails.sandboxKey=keyDetails['accessToken'];
-                appDetails.sandboxConsumerKey=keyDetails['consumerKey'];
-                appDetails.sandboxConsumerSecret=keyDetails['consumerSecret'];
-                appDetails.sandboxValidityTime=keyDetails['validityTime'];
-                appDetails.sandboxAuthorizedDomains=keyDetails['accessallowdomains'].split(',');
+                appDetails.sandboxKey = keyDetails['accessToken'];
+                appDetails.sandboxConsumerKey = keyDetails['consumerKey'];
+                appDetails.sandboxConsumerSecret = keyDetails['consumerSecret'];
+                appDetails.sandboxValidityTime = keyDetails['validityTime'];
+                appDetails.sandboxAuthorizedDomains = keyDetails['accessallowdomains'].split(',');
                 break;
             default:
                 break;
@@ -191,8 +193,8 @@ $(function () {
                 success: function (data) {
                     var jsonData = JSON.parse(data);
                     APP_STORE.productionKeys = jsonData;
-                    var appName= $('#subscription-selection').val();
-                    updateAppDetailsWithKey(appName,'production',jsonData);
+                    var appName = $('#subscription-selection').val();
+                    updateAppDetailsWithKey(appName, 'production', jsonData);
                     events.publish(EV_GENERATE_PROD_TOKEN, jsonData);
                 }
             });
@@ -217,6 +219,8 @@ $(function () {
                 success: function (data) {
                     var jsonData = JSON.parse(data);
                     APP_STORE.sandboxKeys = jsonData;
+                    var appName = $('#subscription-selection').val();
+                    updateAppDetailsWithKey(appName, 'sandbox', jsonData);
                     events.publish(EV_GENERATE_SAND_TOKEN, jsonData);
                 }
             });
@@ -349,6 +353,14 @@ $(function () {
         beforeRender: function (data) {
             data['environment'] = Views.translate('Production');
         },
+        resolveRender: function (data) {
+            //Do not render if the production keys exist
+            if (APP_STORE.productionKeys) {
+                return false;
+            }
+
+            return true;
+        },
         afterRender: attachGenerateProdToken,
         subscriptions: [EV_APP_SELECT]
     });
@@ -402,6 +414,15 @@ $(function () {
         id: 'defaultSandboxKeyView',
         container: SAND_KEYS_CONTAINER,
         afterRender: attachGenerateSandToken,
+        resolveRender: function (data) {
+
+            //Render the default view only if the keys are not present
+            if (APP_STORE.sandboxKeys) {
+                return false;
+            }
+
+            return true;
+        },
         beforeRender: function (data) {
             data['environment'] = Views.translate('Sandbox');
         }
@@ -463,6 +484,15 @@ $(function () {
         partial: 'subscriptions/sub-domain-token',
         beforeRender: function (data) {
             data['environment'] = Views.translate('Production');
+            data['validityTime'] = APP_STORE.appDetails.prodValidityTime;
+            data['allowedDomains'] = APP_STORE.appDetails.prodAuthorizedDomains || [];
+        },
+        resolveRender: function () {
+            if (APP_STORE.productionKeys) {
+                return false;
+            }
+
+            return true;
         },
         subscriptions: [EV_APP_SELECT],
         afterRender: function () {
@@ -472,8 +502,15 @@ $(function () {
     Views.extend('defaultProductionDomainView', {
         id: 'updateProductionDomainView',
         partial: 'subscriptions/sub-domain-update',
-        subscriptions: [EV_GENERATE_PROD_TOKEN],
-        afterRender: attachUpdateProductionDomains
+        subscriptions: [EV_GENERATE_PROD_TOKEN,EV_APP_SELECT],
+        afterRender: attachUpdateProductionDomains,
+        resolveRender: function () {
+            if (APP_STORE.productionKeys) {
+                return true;
+            }
+
+            return false;
+        }
     });
 
     //Sandbox view
@@ -525,23 +562,58 @@ $(function () {
     });
 
 
-    var defaultAppName = $('#subscription-selection').val();
-    events.publish(EV_APP_SELECT, {appName: defaultAppName});
+    /*
+     The function initializes the contents of the APP_STORE
+     */
+    var initAppStore = function (appName) {
 
-    //Connect the events
-    $('#subscription-selection').on('change', function () {
-        var appName = $('#subscription-selection').val();
+        var productionKeys = getKeysFromAppDetails(appName, 'production');
+        var sandboxKeys = getKeysFromAppDetails(appName, 'sandbox');
+
         APP_STORE = {};
         APP_STORE['appName'] = appName;
         APP_STORE['appDetails'] = findAppDetails(appName);
-        var prodKeys=getKeysFromAppDetails(appName,'production');
-        console.info('Obtaining existing key information ');
-        console.info(JSON.stringify(prodKeys));
-        console.info('Finished obtaining key information');
-        APP_STORE['productionKeys'] = null;
-        APP_STORE['sandboxKeys'] = null;
+        APP_STORE['productionKeys'] = productionKeys;
+        APP_STORE['sandboxKeys'] = sandboxKeys;
         APP_STORE['showKeys'] = false;
+    };
+
+    var resolveViewsToRender = function (appName) {
+
+        if (APP_STORE.productionKeys) {
+            events.publish(EV_SHOW_KEYS, APP_STORE.productionKeys);
+        }
+
+
+        if (APP_STORE.sandboxKeys) {
+            events.publish(EV_SHOW_KEYS, APP_STORE.sandboxKeys);
+        }
+
         events.publish(EV_APP_SELECT, {appName: appName});
+    };
+
+    var start = function () {
+        var appName = $('#subscription-selection').val();
+        initAppStore(appName);
+        resolveViewsToRender(appName);
+    };
+
+    //var defaultAppName = $('#subscription-selection').val();
+    //events.publish(EV_APP_SELECT, {appName: defaultAppName});
+    start();
+
+    //Connect the events
+    $('#subscription-selection').on('change', function () {
+        start();
+        //var appName = $('#subscription-selection').val();
+        //initAppStore(appName);
+        //APP_STORE = {};
+        //APP_STORE['appName'] = appName;
+        //APP_STORE['appDetails'] = findAppDetails(appName);
+        //APP_STORE['productionKeys'] = null;
+        //APP_STORE['sandboxKeys'] = null;
+        //APP_STORE['showKeys'] = false;
+        //events.publish(EV_APP_SELECT, {appName: appName});
     });
 
 
