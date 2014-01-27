@@ -48,10 +48,15 @@ var serviceModule = (function () {
      options.validityTime
      */
     KeyService.prototype.generateApplicationKey = function (options) {
+        //log.info()
         log.info(options);
-        var result = this.instance.getApplicationKey(options.username, options.appName, options.keyType, options.callbackUrl,
-            options.accessAllowDomains, options.validityTime);
-        return result;
+       // var result = this.instance.getApplicationKey(options.username, options.appName, options.keyType, options.callbackUrl,
+       //     options.accessAllowDomains, options.validityTime);
+
+        var result = this.subModule.generateApplicationKey( options.appName,options.username, options.keyType, options.callbackUrl,
+             options.accessAllowDomains, options.validityTime);
+
+        return result.key;
     };
 
     /*
