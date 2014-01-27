@@ -70,9 +70,9 @@ var serviceModule = (function () {
      options.validityTime
      */
     KeyService.prototype.refreshToken = function (options) {
-
+        log.info('***************');
         log.info(options);
-        var key = this.instance.refreshToken(options.username,
+        var result = this.subModule.refreshToken(options.username,
             options.appName,
             options.keyType,
             options.oldAccessToken,
@@ -81,7 +81,8 @@ var serviceModule = (function () {
             options.clientSecret,
             options.validityTime);
 
-        return key;
+        log.info(key);
+        return result.key;
     };
 
     /*

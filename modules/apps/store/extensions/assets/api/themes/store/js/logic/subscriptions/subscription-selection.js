@@ -201,6 +201,21 @@ $(function () {
             tokenRefreshData['appName'] = appName;
             tokenRefreshData['keyType']='Production';
             tokenRefreshData['oldAccessToken']=APP_STORE.productionKeys.accessToken;
+            tokenRefreshData['accessAllowDomains']=$('#input-Production-allowedDomains').val()||DEFAULT_ACCESS_ALLOW_DOMAINS;
+            tokenRefreshData['clientId']=APP_STORE.productionKeys.consumerKey;
+            tokenRefreshData['clientSecret']=APP_STORE.productionKeys.consumerSecret;
+            tokenRefreshData['validityTime']=APP_STORE.productionKeys.validityTime;
+            console.info(JSON.stringify(tokenRefreshData));
+
+            $.ajax({
+                type:'PUT',
+                url:API_TOKEN_URL,
+                contentType:'application/json',
+                data:JSON.stringify(tokenRefreshData),
+                success:function(data){
+                    alert('Token refreshed successfully!');
+                }
+            });
         });
     };
 

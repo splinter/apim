@@ -29,11 +29,8 @@ var resource = (function () {
 
 
     var refreshToken = function (context) {
-
         var parameters = request.getContent();
         var accessAllowDomains = parameters.accessAllowDomains.split(',') || [];
-        log.info(accessAllowDomains);
-
         var key = keyApi.refreshToken({
             username: 'admin',
             appName: parameters.appName,
