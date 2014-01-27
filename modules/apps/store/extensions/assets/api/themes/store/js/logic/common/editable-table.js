@@ -39,7 +39,7 @@ $(function () {
     Edtable['resolve'] = function (id, action) {
         var tr = $('#row-' + id);
         if (action == 'delete') {
-            deleteRow(id,tr);
+            deleteRow(id, tr);
         }
         else if (action == 'edit') {
             populateRow(id, tr);
@@ -62,8 +62,11 @@ $(function () {
             var transitionsString = $(td).data('transitions');
             var transitions;
 
-            if (fieldType) {
+            if (fieldType == 'text') {
                 populateTextbox(td);
+            }
+            else if (fieldType == 'select') {
+                populateSelect(td);
             }
 
             if (transitionsString) {
@@ -77,6 +80,21 @@ $(function () {
         //Save the existing value
         var existingValue = $(td).data('value');
         $(td).html('<input class="input-small" type="text" value="' + existingValue + '"/>');
+    };
+
+    var populateSelect = function (td) {
+        //Obtain the source
+        var source = $(td).data('source');
+        var currentValue = $(td).data('value');
+        //Obtain the data from the source
+        var data = metadata[source];
+        var partial = $(td).data('partial');
+
+        if ((data) && (partial)) {
+            metadata['selectedValue'] = currentValue;
+            renderRemotePartial(td, partial, metadata);
+        }
+
     };
 
     var populateTransitions = function (id, td, transitions) {
@@ -121,15 +139,16 @@ $(function () {
                 //Obtain the old value
                 var oldValue = $(this).data('value');
                 data[fieldName] = oldValue;
-
-                if (fieldType) {
-                    var newValue = $(this).find('input').val();
-
-                    var newFieldName = getNewFieldName(fieldName);
-
-                    //Obtain the new value
-                    data[newFieldName] = newValue;
+                var newValue;
+                if (fieldType == 'text') {
+                    newValue = $(this).find('input').val();
                 }
+                else if (fieldType == 'select') {
+                    newValue = $(this).find('select').val();
+                }
+                var newFieldName = getNewFieldName(fieldName);
+                //Obtain the new value
+                data[newFieldName] = newValue;
 
             }
 
@@ -176,19 +195,30 @@ $(function () {
     };
 
     /*
-    The function invokes the api to delete an application
+     The function invokes the api to delete an application
      */
-    var deleteRow=function(id,tr){
-        var dataObject=createDataObject(id,tr);
+    var deleteRow = function (id, tr) {
+        var dataObject = createDataObject(id, tr);
         $.ajax({
-            type:'DELETE',
-            url:DELETE_API+dataObject.appName,
-            success:function(){
+            type: 'DELETE',
+            url: DELETE_API + dataObject.appName,
+            success: function () {
                 alert('Asset deleted successfully!');
                 $('#row-' + id).remove();
             }
         })
     };
 
+
+    var renderRemotePartial = function (container, partial, data) {
+        var obj = {};
+        obj[partial] = '/extensions/assets/api/themes/store/partials/' + partial + '.hbs';
+        caramel.partials(obj, function () {
+            var template = Handlebars.partials[partial](data);
+
+            $(container).html(template);
+
+        });
+    };
 
 });
