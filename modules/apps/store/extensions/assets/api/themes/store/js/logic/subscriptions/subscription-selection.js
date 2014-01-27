@@ -519,6 +519,15 @@ $(function () {
         container: SAND_DOMAIN_CONTAINER,
         beforeRender: function (data) {
             data['environment'] = Views.translate('Sandbox');
+            data['validityTime'] = APP_STORE.appDetails.sandValidityTime;
+            data['allowedDomains'] = APP_STORE.appDetails.sandAuthorizedDomains || [];
+        },
+        resolveRender:function(){
+            if(APP_STORE.sandboxKeys){
+                return false;
+            }
+
+            return true;
         },
         afterRender: function () {
         }
@@ -528,7 +537,14 @@ $(function () {
         id: 'updateSandboxDomainVIew',
         partial: 'subscriptions/sub-domain-update',
         afterRender: attachUpdateSandboxDomains,
-        subscriptions: [EV_GENERATE_SAND_TOKEN]
+        subscriptions: [EV_GENERATE_SAND_TOKEN,EV_APP_SELECT],
+        resolveRender:function(){
+            if(APP_STORE.sandboxKeys){
+                return true;
+            }
+
+            return false;
+        }
     });
 
     /*
