@@ -81,7 +81,6 @@ var serviceModule = (function () {
             options.clientSecret,
             options.validityTime);
 
-        log.info(key);
         return result.key;
     };
 

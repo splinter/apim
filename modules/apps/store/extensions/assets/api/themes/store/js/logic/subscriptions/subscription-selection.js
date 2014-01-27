@@ -66,6 +66,71 @@ $(function () {
         return null;
     };
 
+    /*
+     The function is used to update the metadata store and APP_STORE with details obtain
+     from the server. This method should be called after a token generate or refresh
+     */
+    var updateKeyDetails = function (appName, keyType,key) {
+          var appDetails=findAppDetails(appName);
+
+          switch(keyType){
+              case 'production':
+                  appDetails.prodKey=key;
+                  APP_STORE.productionKeys.accessToken=key;
+                  break;
+              case 'sandbox':
+                  appDetails.sandboxKey=serverDetails.accessToke;
+                  APP_STORE.sandboxKeys.accessToken=serverDetails.accessToken;
+                  break;
+          }
+    };
+
+    var updateAcessAlloWDomains=function(appName,keyType,domains){
+        var appDetails=findAppDetails(appName);
+
+        switch(keyType){
+            case 'production':
+                appDetails.prodAuthorizedDomains=domains;
+                APP_STORE.productionKeys.accessallowdomains=domains;
+                break;
+            case 'sandbox':
+                appDetails.sandboxAuthorizedDomains=domains;
+                APP_STORE.sandboxKeys.accessallowdomains=domains;
+                break;
+        }
+    };
+
+    /*
+     The function is used to obtain the key related details of an application
+     */
+    var getKeysFromAppDetails = function (appName, keyType) {
+        var appDetails = findAppDetails(appName);
+        var keyData = {};
+        keyData['accessToken'] = '';
+        keyData['consumerKey'] = '';
+        keyData['consumerSecret'] = '';
+        keyData['validityTime'] = '';
+        keyData['accessAllowDomains'] = '';
+
+        switch(keyType){
+            case 'production':
+                keyData['accessToken']=appDetails.prodKey;
+                keyData['consumerKey']=appDetails.prodConsumerKey;
+                keyData['consumerSecret']=appDetails.prodConsumerSecret;
+                keyData['validityTime']=appDetails.prodValidityTime;
+                keyData['accessAllowDomains']=appDetails.prodAuthorizedDomains;
+                break;
+            case 'sandbox':
+                keyData['accessToken']=appDetails.sandboxKey;
+                keyData['consumerKey']=appDetails.sandboxConsumerKey;
+                keyData['consumerSecret']=appDetails.sandboxConsumerSecret;
+                keyData['validityTime']=appDetails.sandboxValidityTime;
+                keyData['accessAllowDomains']=appDetails.sandboxAuthorizedDomains;
+                break;
+            default:
+                break;
+        }
+    };
 
     var attachGenerateProdToken = function () {
         ///We need to prevent the afterRender function from been inherited by child views
@@ -199,20 +264,20 @@ $(function () {
             var appName = $('#subscription-selection').val();
             var appDetails = findAppDetails(appName);
             tokenRefreshData['appName'] = appName;
-            tokenRefreshData['keyType']='Production';
-            tokenRefreshData['oldAccessToken']=APP_STORE.productionKeys.accessToken;
-            tokenRefreshData['accessAllowDomains']=$('#input-Production-allowedDomains').val()||DEFAULT_ACCESS_ALLOW_DOMAINS;
-            tokenRefreshData['clientId']=APP_STORE.productionKeys.consumerKey;
-            tokenRefreshData['clientSecret']=APP_STORE.productionKeys.consumerSecret;
-            tokenRefreshData['validityTime']=APP_STORE.productionKeys.validityTime;
+            tokenRefreshData['keyType'] = 'Production';
+            tokenRefreshData['oldAccessToken'] = APP_STORE.productionKeys.accessToken;
+            tokenRefreshData['accessAllowDomains'] = $('#input-Production-allowedDomains').val() || DEFAULT_ACCESS_ALLOW_DOMAINS;
+            tokenRefreshData['clientId'] = APP_STORE.productionKeys.consumerKey;
+            tokenRefreshData['clientSecret'] = APP_STORE.productionKeys.consumerSecret;
+            tokenRefreshData['validityTime'] = APP_STORE.productionKeys.validityTime;
             console.info(JSON.stringify(tokenRefreshData));
 
             $.ajax({
-                type:'PUT',
-                url:API_TOKEN_URL,
-                contentType:'application/json',
-                data:JSON.stringify(tokenRefreshData),
-                success:function(data){
+                type: 'PUT',
+                url: API_TOKEN_URL,
+                contentType: 'application/json',
+                data: JSON.stringify(tokenRefreshData),
+                success: function (data) {
                     alert('Token refreshed successfully!');
                 }
             });
