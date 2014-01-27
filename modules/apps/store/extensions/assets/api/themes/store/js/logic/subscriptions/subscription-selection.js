@@ -19,6 +19,7 @@ $(function () {
     var SAND_DOMAIN_CONTAINER = '#sand-domain-view';
 
     var DEFAULT_TOKEN_VALID_TIME=36000;
+    var DEFAULT_ACCESS_ALLOW_DOMAINS='ALL';
 
     var EV_APP_SELECT = 'eventAppSelection';
     var EV_SHOW_KEYS = 'eventShowKeys';
@@ -76,7 +77,7 @@ $(function () {
             var tokenRequestData = {};
             tokenRequestData['appName'] = appName;
             tokenRequestData['keyType'] = 'Production';
-            tokenRequestData['accessAllowDomains'] = 'ALL';
+            tokenRequestData['accessAllowDomains'] = $('#input-Production-allowedDomains').val()||DEFAULT_ACCESS_ALLOW_DOMAINS;
             tokenRequestData['callbackUrl'] = appDetails.callbackUrl || '';
             tokenRequestData['validityTime'] = $('#input-Production-validityTime').val()||DEFAULT_TOKEN_VALID_TIME;// appDetails.prodValidityTime;
             $.ajax({
@@ -100,7 +101,7 @@ $(function () {
             var tokenRequestData = {};
             tokenRequestData['appName'] = appName;
             tokenRequestData['keyType'] = 'Sandbox';
-            tokenRequestData['accessAllowDomains'] = 'ALL';
+            tokenRequestData['accessAllowDomains'] = $('#input-Sandbox-allowedDomains').val()||DEFAULT_ACCESS_ALLOW_DOMAINS;
             tokenRequestData['callbackUrl'] = appDetails.callbackUrl || '';
             tokenRequestData['validityTime'] = $('#input-Sandbox-validityTime').val()||DEFAULT_TOKEN_VALID_TIME;
             $.ajax({
