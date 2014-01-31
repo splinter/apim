@@ -1,0 +1,18 @@
+<module name="test" xmlns="http://wso2.org/projects/jaggery/module.xml">
+    <script>
+        <name>test</name>
+        <path>scripts/engine/jasmine.js</path>
+    </script>
+	<script>
+        <name>cola</name>
+        <path>scripts/engine/cola.js</path>
+    </script>
+    <script>
+        <name>jsonReporter</name>
+        <path>scripts/reporter/json-reporter.js</path>
+    </script>
+	 <script>
+        <name>simpleHtmlReporter</name>
+        <path>scripts/reporter/simple-html-reporter.js</path>
+    </script>
+</module>
